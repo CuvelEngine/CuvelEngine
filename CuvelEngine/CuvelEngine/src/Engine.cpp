@@ -20,6 +20,7 @@ Engine::Engine(const GLibrary lib)
 Engine::~Engine()
 {
 	delete this->gFramework;
+	glfwTerminate();
 }
 
 void Engine::run()

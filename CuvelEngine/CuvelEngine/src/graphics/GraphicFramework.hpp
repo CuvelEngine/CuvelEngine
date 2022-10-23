@@ -7,8 +7,6 @@ namespace cuvel
 	class GraphicFramework
 	{
 	public:
-		virtual ~GraphicFramework();
-
 		virtual void update() = 0;
 		virtual void event() = 0;
 		virtual void render() = 0;

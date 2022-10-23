@@ -17,10 +17,6 @@ namespace cuvel
         glfwMakeContextCurrent(window);
         return true;
     }
-    GraphicFramework::~GraphicFramework()
-    {
-        glfwTerminate();
-    }
 
     int GraphicFramework::isWindowClosing()
     {

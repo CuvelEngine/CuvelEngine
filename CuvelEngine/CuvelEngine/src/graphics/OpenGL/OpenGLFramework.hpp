@@ -6,7 +6,7 @@ namespace cuvel
 	{
 	public:
 		OpenGLFramework();
-		~OpenGLFramework() override;
+		~OpenGLFramework();
 
 		void update() override;
 		void event() override;
