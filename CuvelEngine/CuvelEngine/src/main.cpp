@@ -1,6 +1,8 @@
+#include "Engine.hpp"
 
-
-int main(void)
+void main(void)
 {
-    return 0;
+    // very complex main function TM
+    Engine engine(GLibrary::OpenGL);
+    engine.run();
 }
