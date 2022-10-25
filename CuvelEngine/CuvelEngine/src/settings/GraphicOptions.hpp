@@ -13,9 +13,10 @@
 
 // --------------------------------------------------------------------------
 
+// window
 #define RESIZABLE true
 
-// Projection options
+// Projection
 #define FOV 90.0f
 #define NEAR_PLANE 0.001f
 #define FAR_PLANE 1000.0f

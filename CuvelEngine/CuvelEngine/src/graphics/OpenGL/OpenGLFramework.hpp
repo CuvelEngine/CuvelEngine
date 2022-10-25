@@ -16,8 +16,8 @@ namespace cuvel
 		OpenGLFramework();
 		~OpenGLFramework() override;
 
-		void update() override;
-		void event() override;
+		void update(const float_t& dt) override;
+		void event(const float_t& dt) override;
 		void render() override;
 
 		void addModel(uint32_t id, Mesh mesh) override;

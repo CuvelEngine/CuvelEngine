@@ -29,14 +29,10 @@ namespace cuvel
     void GraphicFramework::initProjection(bool invertedY)
     {
         //TODO: Prepare for Vulkan (Vulkan uses inverted y axis)
-        this->worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-        this->camFront = glm::vec3(0.0f, 0.0f, -1.0f);
-        this->cameraPos = glm::vec3(0.0f, 0.0f, 1.0f);
-        this->viewMatrix = glm::mat4(1.0f);
+        this->camera.updateViewMatrix();
 
         // Papa GLM does everything for us :D
-        this->viewMatrix = glm::lookAt(this->cameraPos, this->cameraPos + this->camFront, this->worldUp);
-        glm::mat4 ProjectionMatrix(1.0f);
+    	glm::mat4 ProjectionMatrix(1.0f);
         this->projMatrix = glm::perspective(glm::radians(FOV), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
     }
 

@@ -3,6 +3,7 @@
 #include <string>
 
 #include "graphics/Mesh.hpp"
+#include "movement/Camera.hpp"
 
 // Simple enumerator for the different library options (DirectX in the future maybe?)
 enum GLibrary
@@ -22,10 +23,10 @@ namespace cuvel
 		virtual ~GraphicFramework() = default;
 
 		// update variables between frames
-		virtual void update() = 0;
+		virtual void update(const float_t& dt) = 0;
 
 		// process inputs between frames
-		virtual void event() = 0;
+		virtual void event(const float_t& dt) = 0;
 
 		// render new frame
 		virtual void render() = 0;
@@ -52,12 +53,7 @@ namespace cuvel
 		GLFWwindow* window = nullptr;
 
 		// Matrices that are going to be sent to the shaders so the 3D actually makes sense
-		glm::mat4 viewMatrix{1.f};
+		Camera camera{};
 		glm::mat4 projMatrix{1.f};
-
-		// Names are self explanatory. Needed to make the projection matrix
-		glm::vec3 cameraPos{};
-		glm::vec3 camFront{};
-		glm::vec3 worldUp{};
 	};
 }

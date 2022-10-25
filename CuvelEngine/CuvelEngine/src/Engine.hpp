@@ -10,7 +10,13 @@ public:
 	~Engine();
 	void run();
 
+	float dt;
 private:
+	void updateDt();
+
+	float curTime;
+	float lastTime;
+
 	cuvel::GraphicFramework* gFramework;
 };
 
