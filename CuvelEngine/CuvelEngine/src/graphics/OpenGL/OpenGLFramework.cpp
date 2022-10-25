@@ -104,47 +104,17 @@ namespace cuvel
 
 	void OpenGLFramework::update(const float_t& dt)
 	{
-		//TODO: Update camera's ViewMatrix (when we get one)
+		// Update the view matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ViewMatrix"), 1, false, glm::value_ptr(this->camera.viewMatrix));
 
 		// Update the projection matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ProjectionMatrix"), 1, false, glm::value_ptr(this->projMatrix));
 	}
 
+	// For now nothing weird has to be done processing inputs so it just calls the parent function
 	void OpenGLFramework::event(const float_t& dt)
 	{
-		glfwPollEvents();
-		if (glfwGetKey(window, FORW) == GLFW_PRESS)
-		{
-			this->camera.updateKeyboardInput(dt, Directions::forward);
-		}
-		if (glfwGetKey(window, BACKW) == GLFW_PRESS)
-		{
-			this->camera.updateKeyboardInput(dt, Directions::backward);
-		}
-		if (glfwGetKey(window, LEFT) == GLFW_PRESS)
-		{
-			this->camera.updateKeyboardInput(dt, Directions::left);
-		}
-		if (glfwGetKey(window, RIGHT) == GLFW_PRESS)
-		{
-			this->camera.updateKeyboardInput(dt, Directions::right);
-		}
-		if (glfwGetKey(window, UP) == GLFW_PRESS)
-		{
-			this->camera.updateKeyboardInput(dt, Directions::up);
-		}
-		if (glfwGetKey(window, DOWN) == GLFW_PRESS)
-		{
-			this->camera.updateKeyboardInput(dt, Directions::down);
-		}
-
-		double mouseX;
-		double mouseY;
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-		this->camera.updateMouseInput(dt, mouseX, mouseY);
-
-		this->camera.updateViewMatrix();
+		this->GraphicFramework::event(dt);
 	}
 
 	void OpenGLFramework::render()

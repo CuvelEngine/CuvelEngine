@@ -28,7 +28,6 @@ namespace cuvel
 
     void GraphicFramework::initProjection(bool invertedY)
     {
-        //TODO: Prepare for Vulkan (Vulkan uses inverted y axis)
         this->camera.updateViewMatrix();
 
         // Papa GLM does everything for us :D
@@ -57,6 +56,56 @@ namespace cuvel
         return src;
     }
 
+    // Destroy the window. This is called when children are destroyed too so it's perfect
+    GraphicFramework::~GraphicFramework()
+    {
+        std::cout << "Called parent destructor!!";
+        glfwTerminate();
+    }
+
+    // This basic function will use glfw to get keyboard inputs and update mouse inputs
+    void GraphicFramework::event(const float_t& dt)
+    {
+        glfwPollEvents();
+
+        // Simply go through each relevant key and edit the camera if it is triggered
+        // TODO: Improve for greater flexibility
+        if (glfwGetKey(window, FORW) == GLFW_PRESS)
+        {
+            this->camera.updateKeyboardInput(dt, Directions::forward);
+        }
+        if (glfwGetKey(window, BACKW) == GLFW_PRESS)
+        {
+            this->camera.updateKeyboardInput(dt, Directions::backward);
+        }
+        if (glfwGetKey(window, LEFT) == GLFW_PRESS)
+        {
+            this->camera.updateKeyboardInput(dt, Directions::left);
+        }
+        if (glfwGetKey(window, RIGHT) == GLFW_PRESS)
+        {
+            this->camera.updateKeyboardInput(dt, Directions::right);
+        }
+        if (glfwGetKey(window, UP) == GLFW_PRESS)
+        {
+            this->camera.updateKeyboardInput(dt, Directions::up);
+        }
+        if (glfwGetKey(window, DOWN) == GLFW_PRESS)
+        {
+            this->camera.updateKeyboardInput(dt, Directions::down);
+        }
+
+        // Update the mouse, it takes the raw mouse data and handles it internally as needed
+        double mouseX;
+        double mouseY;
+        glfwGetCursorPos(window, &mouseX, &mouseY);
+        this->camera.updateMouseInput(dt, mouseX, mouseY);
+
+        // Instead of updating after every change it just updates it manually at the end
+        this->camera.updateViewMatrix();
+    }
+
+    // Detect if the cross at the top right of the window has been pressed.
     int GraphicFramework::isWindowClosing()
     {
         return glfwWindowShouldClose(window);

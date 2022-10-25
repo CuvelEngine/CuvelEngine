@@ -32,7 +32,6 @@ Engine::~Engine()
 {
 	// DELETE THIS
 	delete this->gFramework;
-	glfwTerminate();
 }
 
 void Engine::run()

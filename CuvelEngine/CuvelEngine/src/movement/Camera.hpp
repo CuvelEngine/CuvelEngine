@@ -3,6 +3,9 @@
 
 namespace cuvel
 {
+	// This structure is done so directions are shown as a library agnostic tool.
+	// Each library will then interpret it as needed. This way glfw doesn't have to be imported
+	// here, lowering modularity
 	enum Directions
 	{
 		forward = 0,
@@ -13,6 +16,9 @@ namespace cuvel
 		down = 5
 	};
 
+	// The camera class!! It will simply handle the math and store the resulting viewMatrix that
+	// will be used in the shader. Does not handle inputs directly so they have to be given
+	// from outside
 	class Camera
 	{
 	public:

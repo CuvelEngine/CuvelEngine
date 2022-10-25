@@ -20,13 +20,13 @@ namespace cuvel
 	class GraphicFramework
 	{
 	public:
-		virtual ~GraphicFramework() = default;
+		virtual ~GraphicFramework();
 
 		// update variables between frames
 		virtual void update(const float_t& dt) = 0;
 
 		// process inputs between frames
-		virtual void event(const float_t& dt) = 0;
+		virtual void event(const float_t& dt);
 
 		// render new frame
 		virtual void render() = 0;
@@ -52,8 +52,10 @@ namespace cuvel
 
 		GLFWwindow* window = nullptr;
 
-		// Matrices that are going to be sent to the shaders so the 3D actually makes sense
+		// Camera class that will beautifully handle the viewMatrix
 		Camera camera{};
+
+		// Matrix that is going to be sent to the shaders so the 3D space actually makes sense
 		glm::mat4 projMatrix{1.f};
 	};
 }
