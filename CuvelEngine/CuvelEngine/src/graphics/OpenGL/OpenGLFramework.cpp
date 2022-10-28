@@ -102,18 +102,19 @@ namespace cuvel
 	}
 
 
-	void OpenGLFramework::update()
+	void OpenGLFramework::update(const float_t& dt)
 	{
-		//TODO: Update camera's ViewMatrix (when we get one)
-		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ViewMatrix"), 1, false, glm::value_ptr(this->viewMatrix));
+		// Update the view matrix uniform
+		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ViewMatrix"), 1, false, glm::value_ptr(this->camera.viewMatrix));
 
 		// Update the projection matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ProjectionMatrix"), 1, false, glm::value_ptr(this->projMatrix));
 	}
 
-	void OpenGLFramework::event()
+	// For now nothing weird has to be done processing inputs so it just calls the parent function
+	void OpenGLFramework::event(const float_t& dt)
 	{
-
+		this->GraphicFramework::event(dt);
 	}
 
 	void OpenGLFramework::render()
@@ -134,8 +135,6 @@ namespace cuvel
 
 		glfwSwapBuffers(window);
 		glFlush();
-
-		glfwPollEvents();
 	}
 
 	void OpenGLFramework::addModel(uint32_t id, const Mesh mesh)

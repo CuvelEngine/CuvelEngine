@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\movement\Camera.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\graphics\GraphicFramework.cpp" />
     <ClCompile Include="src\graphics\OpenGL\OpenGLFramework.cpp" />
@@ -142,12 +143,14 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\movement\Camera.hpp" />
     <ClInclude Include="src\graphics\OpenGL\OpenGLModel.hpp" />
     <ClInclude Include="src\graphics\Mesh.hpp" />
     <ClInclude Include="src\Engine.hpp" />
     <ClInclude Include="src\settings\GraphicOptions.hpp" />
     <ClInclude Include="src\graphics\OpenGL\OpenGLFramework.hpp" />
     <ClInclude Include="src\graphics\GraphicFramework.hpp" />
+    <ClInclude Include="src\settings\MovementOptions.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\graphics\shaders\fragment.glsl" />

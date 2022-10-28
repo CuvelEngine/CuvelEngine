@@ -32,7 +32,6 @@ Engine::~Engine()
 {
 	// DELETE THIS
 	delete this->gFramework;
-	glfwTerminate();
 }
 
 void Engine::run()
@@ -40,8 +39,16 @@ void Engine::run()
 	// Each loop is one frame
 	while (!this->gFramework->isWindowClosing())
 	{
-		this->gFramework->event();
-		this->gFramework->update();
+		this->updateDt();
+		this->gFramework->event(this->dt);
+		this->gFramework->update(this->dt);
 		this->gFramework->render();
 	}
+}
+
+void Engine::updateDt()
+{
+	curTime = static_cast<float>(glfwGetTime());
+	dt = curTime - lastTime;
+	lastTime = curTime;
 }
