@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(ProjectDir)ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,7 +123,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(ProjectDir)ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +135,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ImGui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\imgui\ImguiManager.cpp" />
     <ClCompile Include="src\movement\Camera.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\graphics\GraphicFramework.cpp" />
@@ -143,6 +151,16 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImGui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\imgui\ImguiManager.hpp" />
     <ClInclude Include="src\movement\Camera.hpp" />
     <ClInclude Include="src\graphics\OpenGL\OpenGLModel.hpp" />
     <ClInclude Include="src\graphics\Mesh.hpp" />

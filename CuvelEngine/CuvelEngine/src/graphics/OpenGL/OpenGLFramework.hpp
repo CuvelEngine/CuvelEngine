@@ -22,6 +22,9 @@ namespace cuvel
 
 		void addModel(uint32_t id, Mesh mesh) override;
 
+		void setupImgui() override;
+		void destroyImgui() override;
+
 	private:
 		// This class manages OpenGL's shaders. Im not sure if this will stay
 		// since we can probably just insert it into the class itself, but it works for now

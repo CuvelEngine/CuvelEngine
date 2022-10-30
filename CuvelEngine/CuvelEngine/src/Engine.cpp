@@ -3,19 +3,26 @@
 #include <exception>
 
 #include "graphics/OpenGL/OpenGLFramework.hpp"
+#include "imgui/ImguiManager.hpp"
 
-Engine::Engine(const GLibrary lib)
+Engine::Engine(const GLibrary lib): dt(0), lastTime(0), curTime(0)
 {
+	this->imguiManager = new cuvel::ImguiManager();
+
 	// This should be able to do hot reload in the future!!
-	if (lib == GLibrary::OpenGL)
+	switch (lib)
 	{
+	case GLibrary::OpenGL:
 		this->gFramework = new cuvel::OpenGLFramework();
-	}
-	else if (lib == GLibrary::Vulkan)
-	{
-		//TODO: Implementar vulkan
+		break;
+	case GLibrary::Vulkan:
+		//TODO: Implement vulkan
 		throw std::exception("Vulkan is not implemented");
+	default:
+		throw std::exception("Graphics library not recognized");
 	}
+	
+	this->gFramework->setupImgui();
 
 	// Im just testing a triangle, might delete later UwU
 	cuvel::Mesh mesh{};
@@ -30,7 +37,8 @@ Engine::Engine(const GLibrary lib)
 
 Engine::~Engine()
 {
-	// DELETE THIS
+	this->gFramework->destroyImgui();
+	delete this->imguiManager;
 	delete this->gFramework;
 }
 

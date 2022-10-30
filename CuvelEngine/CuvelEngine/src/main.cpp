@@ -1,6 +1,6 @@
 #include "Engine.hpp"
 
-int main(void)
+int main()
 {
     // very complex main function TM
     Engine engine(GLibrary::OpenGL);

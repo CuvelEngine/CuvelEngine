@@ -3,6 +3,9 @@
 #include <exception>
 #include <iostream>
 
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
 // You can ignore this, it's a simple callback function for error control
 void GLAPIENTRY
 MessageCallback(GLenum source,
@@ -141,6 +144,19 @@ namespace cuvel
 	{
 		// self explanatory
 		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id));
+	}
+
+	void OpenGLFramework::setupImgui()
+	{
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+		const std::string glsl_version = "#version " + std::to_string(GLMAYOR) + std::to_string(GLMINOR) + "0";
+		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+	}
+
+	void OpenGLFramework::destroyImgui()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
 	}
 
 	OpenGLFramework::Shader::Shader(const std::string& vertex, const std::string& fragment, const std::string& geometry)

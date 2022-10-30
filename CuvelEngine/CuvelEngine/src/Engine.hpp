@@ -1,5 +1,6 @@
 #pragma once
 #include "graphics/GraphicFramework.hpp"
+#include "imgui/ImguiManager.hpp"
 
 // Main class of the system. It literally just initiates everything then run the loop
 // Doesn't do much for now tbh
@@ -18,5 +19,6 @@ private:
 	float lastTime;
 
 	cuvel::GraphicFramework* gFramework;
+	cuvel::ImguiManager* imguiManager;
 };
 
