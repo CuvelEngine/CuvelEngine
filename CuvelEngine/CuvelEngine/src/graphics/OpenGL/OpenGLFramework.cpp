@@ -177,7 +177,8 @@ namespace cuvel
 
 	void OpenGLFramework::imgui_windows()
 	{
-		ImGui::SetNextWindowSize(ImVec2(2, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(250, 120));
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
 		ImGui::Begin("Graphics debug");
 		ImGui::Text("Frametime: %.3fms (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Draw calls: %d", this->drawCalls);

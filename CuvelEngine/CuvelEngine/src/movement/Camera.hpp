@@ -32,6 +32,7 @@ namespace cuvel
 		void imgui_windows();
 
 		glm::mat4 viewMatrix{ 1.0f };
+		bool firstMouse = true;
 	private:
 		glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
 		glm::vec3 pos{ 0.0f, 0.0f, 1.0f };
@@ -47,7 +48,6 @@ namespace cuvel
 		double lastMouseY = 0.0;
 		double mouseOffsetX = 0.0;
 		double mouseOffsetY = 0.0;
-		bool   firstMouse = true;
 
 		float mouseSensitivity = 5;
 		float movementSpeed = 6;

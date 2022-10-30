@@ -113,7 +113,6 @@ namespace cuvel
             this->isCursorReleased = true;
         }
 
-        //TODO: For some reason mouse resets when unlocked, must be looked into-
         if (this->isMouseLocked)
         {
             // Update the mouse, it takes the raw mouse data and handles it internally as needed
@@ -121,6 +120,10 @@ namespace cuvel
             double mouseY;
             glfwGetCursorPos(window, &mouseX, &mouseY);
             this->camera.updateMouseInput(dt, mouseX, mouseY);
+        }
+        else 
+        {
+            this->camera.firstMouse = true;
         }
 
         // Instead of updating after every change it just updates it manually at the end

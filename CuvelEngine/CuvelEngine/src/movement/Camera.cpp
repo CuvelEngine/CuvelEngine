@@ -96,10 +96,15 @@ namespace cuvel
 
 	void Camera::imgui_windows()
 	{
-		ImGui::SetNextWindowPos(ImVec2(2, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(250, 220));
+		ImGui::SetNextWindowPos(ImVec2(0, 120));
 		ImGui::Begin("Camera controls");
 		ImGui::SliderFloat("Mouse sensitivity", &mouseSensitivity, 0.0f, 50.0f);
 		ImGui::SliderFloat("Movement Speed", &movementSpeed, 0.0f, 100.0f);
+		ImGui::Text("mouse X: %.4f", this->lastMouseX);
+		ImGui::Text("mouse Y: %.4f", this->lastMouseY);
+		ImGui::Text("mouse offset X: %.4f", this->mouseOffsetX);
+		ImGui::Text("mouse offset Y: %.4f", this->mouseOffsetY);
 		ImGui::End();
 	}
 }
