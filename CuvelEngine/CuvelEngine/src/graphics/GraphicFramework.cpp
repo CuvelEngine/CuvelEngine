@@ -42,7 +42,7 @@ namespace cuvel
     {
         if (lock)
             // Mouse is locked and hidden
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         else
             // Mouse can move freely
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

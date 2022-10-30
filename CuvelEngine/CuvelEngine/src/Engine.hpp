@@ -22,7 +22,5 @@ private:
 
 	cuvel::GraphicFramework* gFramework;
 	cuvel::ImguiManager* imguiManager;
-
-	//imgui support flags
 };
 
