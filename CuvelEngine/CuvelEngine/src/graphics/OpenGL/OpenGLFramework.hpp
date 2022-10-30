@@ -26,7 +26,7 @@ namespace cuvel
 		void newFrameImgui() override;
 		void destroyImgui() override;
 
-		void imgui_windows() override;
+		void imguiWindow() override;
 
 	private:
 		// This class manages OpenGL's shaders. Im not sure if this will stay
@@ -53,9 +53,9 @@ namespace cuvel
 		std::unordered_map<uint32_t, OpenGLModel*> models;
 
 		//Imgui parameters
-		uint32_t vertices;
-		uint32_t indices;
-		uint16_t drawCalls;
+		uint32_t vertices = 0;
+		uint32_t indices = 0;
+		uint16_t drawCalls = 0;
 	};
 }
 

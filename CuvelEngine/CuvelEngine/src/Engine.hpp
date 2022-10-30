@@ -11,16 +11,18 @@ public:
 	~Engine();
 	void run();
 
+	void addWindows();
+
 	float dt;
 private:
 	void updateDt();
-
-	void processImguiWindows();
 
 	float curTime;
 	float lastTime;
 
 	cuvel::GraphicFramework* gFramework;
 	cuvel::ImguiManager* imguiManager;
+
+	//imgui support flags
 };
 

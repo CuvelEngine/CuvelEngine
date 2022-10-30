@@ -17,7 +17,7 @@ namespace cuvel
 	//Interface for the Graphics framework, will be inherited by each graphics
 	//library implementation.
 	// TODO: see if this is actually a good set of functions for the template
-	class GraphicFramework
+	class GraphicFramework : public ImguiCompatible
 	{
 	public:
 		virtual ~GraphicFramework();
@@ -40,15 +40,13 @@ namespace cuvel
 		virtual void newFrameImgui() = 0;
 		virtual void destroyImgui() = 0;
 
-		//create the graphics info window
-		virtual void imgui_windows() = 0;
+		void imguiWindow() override = 0;
 
 		// Check if the window is closed
 		int isWindowClosing();
 
 		// Camera class that will beautifully handle the viewMatrix
 		Camera camera;
-
 	protected:
 		static bool initglfw();
 		bool createWindow();
@@ -69,6 +67,6 @@ namespace cuvel
 		glm::mat4 projMatrix{1.f};
 
 		bool isMouseLocked = true;
-		bool isCursorReleased;
+		bool isCursorReleased{};
 	};
 }

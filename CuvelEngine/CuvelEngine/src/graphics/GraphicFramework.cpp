@@ -15,7 +15,7 @@ namespace cuvel
     bool GraphicFramework::createWindow()
     {
 
-        this->window = glfwCreateWindow(1280, 720, "Cuvel Engine", NULL, NULL);
+        this->window = glfwCreateWindow(1280, 720, "Cuvel Engine", nullptr, nullptr);
         if (!this->window)
         {
             glfwTerminate();
@@ -23,6 +23,9 @@ namespace cuvel
         }
 
         glfwMakeContextCurrent(window);
+
+        //This line of code disables VSync
+        //glfwSwapInterval(0);
         return true;
     }
 
@@ -38,8 +41,10 @@ namespace cuvel
     void GraphicFramework::setLockCursor(const bool lock)
     {
         if (lock)
+            // Mouse is locked and hidden
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         else
+            // Mouse can move freely
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
@@ -67,7 +72,6 @@ namespace cuvel
     // Destroy the window. This is called when children are destroyed too so it's perfect
     GraphicFramework::~GraphicFramework()
     {
-        std::cout << "Called parent destructor!!";
         glfwTerminate();
     }
 
