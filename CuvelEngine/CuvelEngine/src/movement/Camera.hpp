@@ -1,4 +1,5 @@
 #pragma once
+#include "imgui/ImguiManager.hpp"
 #include "settings/MovementOptions.hpp"
 
 namespace cuvel
@@ -28,6 +29,8 @@ namespace cuvel
 		void updateKeyboardInput(const float_t& dt, const Directions dir);
 		void updateMouseInput(const float_t& dt, const double& mouseX, const double& mouseY);
 
+		void imgui_windows();
+
 		glm::mat4 viewMatrix{ 1.0f };
 	private:
 		glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
@@ -45,6 +48,9 @@ namespace cuvel
 		double mouseOffsetX = 0.0;
 		double mouseOffsetY = 0.0;
 		bool   firstMouse = true;
+
+		float mouseSensitivity = 5;
+		float movementSpeed = 6;
 	};
 }
 

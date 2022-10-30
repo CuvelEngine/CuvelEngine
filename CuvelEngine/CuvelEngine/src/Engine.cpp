@@ -5,7 +5,7 @@
 #include "graphics/OpenGL/OpenGLFramework.hpp"
 #include "imgui/ImguiManager.hpp"
 
-Engine::Engine(const GLibrary lib): dt(0), lastTime(0), curTime(0)
+Engine::Engine(const GLibrary lib): dt(0), curTime(0), lastTime(0)
 {
 	this->imguiManager = new cuvel::ImguiManager();
 
@@ -50,6 +50,9 @@ void Engine::run()
 		this->updateDt();
 		this->gFramework->event(this->dt);
 		this->gFramework->update(this->dt);
+		
+		this->processImguiWindows();
+
 		this->gFramework->render();
 	}
 }
@@ -59,4 +62,14 @@ void Engine::updateDt()
 	curTime = static_cast<float>(glfwGetTime());
 	dt = curTime - lastTime;
 	lastTime = curTime;
+}
+
+void Engine::processImguiWindows()
+{
+	this->gFramework->newFrameImgui();
+
+	this->gFramework->imgui_windows();
+	this->gFramework->camera.imgui_windows();
+
+	this->imguiManager->renderImgui();
 }

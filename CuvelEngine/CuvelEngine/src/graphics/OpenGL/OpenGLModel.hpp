@@ -17,6 +17,7 @@ namespace cuvel
 
 		void loadUniform();
 		void render();
+		void getRenderStats(uint32_t* vertices, uint32_t* indices);
 
 	private:
 		// Buffer and Array IDs from OpenGL

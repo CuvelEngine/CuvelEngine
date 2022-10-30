@@ -15,4 +15,8 @@ namespace cuvel
 	{
 		ImGui::DestroyContext();
 	}
+	void ImguiManager::renderImgui()
+	{
+		ImGui::Render();
+	}
 }

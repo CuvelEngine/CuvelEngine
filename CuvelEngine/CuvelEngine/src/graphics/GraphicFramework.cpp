@@ -35,6 +35,14 @@ namespace cuvel
         this->projMatrix = glm::perspective(glm::radians(FOV), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
     }
 
+    void GraphicFramework::setLockCursor(const bool lock)
+    {
+        if (lock)
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
     std::string GraphicFramework::loadShaderSrc(const std::string& file)
     {
         std::string src;
@@ -94,12 +102,26 @@ namespace cuvel
         {
             this->camera.updateKeyboardInput(dt, Directions::down);
         }
+        if (glfwGetKey(window, CURSOR) == GLFW_PRESS && this->isCursorReleased)
+        {
+            this->isMouseLocked = !this->isMouseLocked;
+            this->setLockCursor(this->isMouseLocked);
+            this->isCursorReleased = false;
+        }
+        if (glfwGetKey(window, CURSOR) == GLFW_RELEASE && !this->isCursorReleased)
+        {
+            this->isCursorReleased = true;
+        }
 
-        // Update the mouse, it takes the raw mouse data and handles it internally as needed
-        double mouseX;
-        double mouseY;
-        glfwGetCursorPos(window, &mouseX, &mouseY);
-        this->camera.updateMouseInput(dt, mouseX, mouseY);
+        //TODO: For some reason mouse resets when unlocked, must be looked into-
+        if (this->isMouseLocked)
+        {
+            // Update the mouse, it takes the raw mouse data and handles it internally as needed
+            double mouseX;
+            double mouseY;
+            glfwGetCursorPos(window, &mouseX, &mouseY);
+            this->camera.updateMouseInput(dt, mouseX, mouseY);
+        }
 
         // Instead of updating after every change it just updates it manually at the end
         this->camera.updateViewMatrix();

@@ -26,22 +26,22 @@ namespace cuvel
 		switch (dir)
 		{
 		case Directions::forward:
-			pos += front * MOVEMENT_SPEED * dt;
+			pos += front * this->movementSpeed * dt;
 			break;
 		case Directions::backward:
-			pos -= front * MOVEMENT_SPEED * dt;
+			pos -= front * this->movementSpeed * dt;
 			break;
 		case Directions::left:
-			pos -= right * MOVEMENT_SPEED * dt;
+			pos -= right * this->movementSpeed * dt;
 			break;
 		case Directions::right:
-			pos += right * MOVEMENT_SPEED * dt;
+			pos += right * this->movementSpeed * dt;
 			break;
 		case Directions::up:
-			pos += worldUp * MOVEMENT_SPEED * dt;
+			pos += worldUp * this->movementSpeed * dt;
 			break;
 		case Directions::down:
-			pos -= worldUp * MOVEMENT_SPEED * dt;
+			pos -= worldUp * this->movementSpeed * dt;
 			break;
 		default:
 			break;
@@ -68,8 +68,8 @@ namespace cuvel
 		lastMouseY = mouseY;
 
 		// We update the pitch and yaw directly from the movement, pretty straightforward
-		pitch -= static_cast<float_t>(mouseOffsetY) * MOUSE_SENSITIVITY * dt;
-		yaw += static_cast<float_t>(mouseOffsetX) * MOUSE_SENSITIVITY * dt;
+		pitch -= static_cast<float_t>(mouseOffsetY) * this->mouseSensitivity * dt;
+		yaw += static_cast<float_t>(mouseOffsetX) * this->mouseSensitivity * dt;
 
 		// We want to limit how much rotation we can get so our head doesn't do a vertical 360
 		// and break our necks
@@ -92,5 +92,14 @@ namespace cuvel
 		front = glm::normalize(front);
 		right = glm::normalize(glm::cross(front, worldUp));
 		up = glm::normalize(glm::cross(right, front));
+	}
+
+	void Camera::imgui_windows()
+	{
+		ImGui::SetNextWindowPos(ImVec2(2, 0), ImGuiCond_FirstUseEver);
+		ImGui::Begin("Camera controls");
+		ImGui::SliderFloat("Mouse sensitivity", &mouseSensitivity, 0.0f, 50.0f);
+		ImGui::SliderFloat("Movement Speed", &movementSpeed, 0.0f, 100.0f);
+		ImGui::End();
 	}
 }

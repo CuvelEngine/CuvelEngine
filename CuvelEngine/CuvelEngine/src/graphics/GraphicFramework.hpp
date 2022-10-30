@@ -37,15 +37,24 @@ namespace cuvel
 
 		// Imgui handling
 		virtual void setupImgui() = 0;
+		virtual void newFrameImgui() = 0;
 		virtual void destroyImgui() = 0;
+
+		//create the graphics info window
+		virtual void imgui_windows() = 0;
 
 		// Check if the window is closed
 		int isWindowClosing();
+
+		// Camera class that will beautifully handle the viewMatrix
+		Camera camera;
 
 	protected:
 		static bool initglfw();
 		bool createWindow();
 		void initProjection(bool invertedY);
+
+		void setLockCursor(bool lock);
 
 		//TODO: Not sure if Vulkan can use this. May have to move into OpenGLFramework
 		static std::string loadShaderSrc(const std::string& file);
@@ -56,10 +65,10 @@ namespace cuvel
 
 		GLFWwindow* window = nullptr;
 
-		// Camera class that will beautifully handle the viewMatrix
-		Camera camera{};
-
 		// Matrix that is going to be sent to the shaders so the 3D space actually makes sense
 		glm::mat4 projMatrix{1.f};
+
+		bool isMouseLocked = true;
+		bool isCursorReleased;
 	};
 }

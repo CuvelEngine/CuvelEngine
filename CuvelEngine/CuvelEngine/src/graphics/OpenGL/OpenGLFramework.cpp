@@ -44,7 +44,7 @@ namespace cuvel
 		glfwWindowHint(GLFW_RESIZABLE, RESIZABLE);
 		// Im not sure what this one does either
 		glfwWindowHint(GLFW_SAMPLES, GLSAMPLES);
-		
+
 
 		if (!this->createWindow())
 		{
@@ -89,7 +89,7 @@ namespace cuvel
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// This is what traps the mouse in the window and hides it.
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		this->setLockCursor(true);
 
 		this->shader = new Shader(VERTEX_LOCATION, FRAGMENT_LOCATION, GEOMETRY_LOCATION);
 		glUseProgram(this->shader->id);
@@ -130,11 +130,20 @@ namespace cuvel
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+		this->drawCalls = 0;
+		this->vertices = 0;
+		this->indices = 0;
+
 		// for every model, render it.
 		for (const std::pair<uint32_t, OpenGLModel*> model : this->models)
 		{
 			model.second->render();
+			model.second->getRenderStats(&this->vertices, &this->indices);
+			this->drawCalls++;
 		}
+
+		//TODO: Isolate this so ImGui is in its own area
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
 		glFlush();
@@ -153,10 +162,28 @@ namespace cuvel
 		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 	}
 
+	void OpenGLFramework::newFrameImgui()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
 	void OpenGLFramework::destroyImgui()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
+	}
+
+	void OpenGLFramework::imgui_windows()
+	{
+		ImGui::SetNextWindowSize(ImVec2(2, 0), ImGuiCond_FirstUseEver);
+		ImGui::Begin("Graphics debug");
+		ImGui::Text("Frametime: %.3fms (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("Draw calls: %d", this->drawCalls);
+		ImGui::Text("Vertices: %d", this->vertices);
+		ImGui::Text("Indices: %d", this->indices);
+		ImGui::End();
 	}
 
 	OpenGLFramework::Shader::Shader(const std::string& vertex, const std::string& fragment, const std::string& geometry)

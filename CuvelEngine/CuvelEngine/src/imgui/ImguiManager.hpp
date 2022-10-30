@@ -7,19 +7,11 @@ namespace cuvel
 	class ImguiManager
 	{
 	public:
-		ImguiManager();
+		explicit ImguiManager();
 		~ImguiManager();
 
 		void renderImgui();
-
 	private:
-		// Create variables here
-		//------------------------------------------------
-		float mouseSensitivity = 6.f;
-		float movementSpeed = 5.f;
-
-		//------------------------------------------------
-
 		ImGuiIO io;
 	};
 }

@@ -15,6 +15,8 @@ public:
 private:
 	void updateDt();
 
+	void processImguiWindows();
+
 	float curTime;
 	float lastTime;
 
