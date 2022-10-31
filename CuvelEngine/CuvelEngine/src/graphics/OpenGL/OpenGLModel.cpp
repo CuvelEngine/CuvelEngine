@@ -60,4 +60,10 @@ namespace cuvel
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, this->mesh.indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
+
+	void OpenGLModel::getRenderStats(uint32_t* vertices, uint32_t* indices)
+	{
+		*vertices += this->mesh.vertices.size();
+		*indices += this->mesh.indices.size();
+	}
 }

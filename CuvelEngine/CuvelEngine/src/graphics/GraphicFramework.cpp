@@ -15,7 +15,7 @@ namespace cuvel
     bool GraphicFramework::createWindow()
     {
 
-        this->window = glfwCreateWindow(1280, 720, "Cuvel Engine", NULL, NULL);
+        this->window = glfwCreateWindow(1280, 720, "Cuvel Engine", nullptr, nullptr);
         if (!this->window)
         {
             glfwTerminate();
@@ -23,6 +23,9 @@ namespace cuvel
         }
 
         glfwMakeContextCurrent(window);
+
+        //This line of code disables VSync
+        //glfwSwapInterval(0);
         return true;
     }
 
@@ -33,6 +36,16 @@ namespace cuvel
         // Papa GLM does everything for us :D
     	glm::mat4 ProjectionMatrix(1.0f);
         this->projMatrix = glm::perspective(glm::radians(FOV), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
+    }
+
+    void GraphicFramework::setLockCursor(const bool lock)
+    {
+        if (lock)
+            // Mouse is locked and hidden
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else
+            // Mouse can move freely
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     std::string GraphicFramework::loadShaderSrc(const std::string& file)
@@ -59,7 +72,6 @@ namespace cuvel
     // Destroy the window. This is called when children are destroyed too so it's perfect
     GraphicFramework::~GraphicFramework()
     {
-        std::cout << "Called parent destructor!!";
         glfwTerminate();
     }
 
@@ -94,12 +106,29 @@ namespace cuvel
         {
             this->camera.updateKeyboardInput(dt, Directions::down);
         }
+        if (glfwGetKey(window, CURSOR) == GLFW_PRESS && this->isCursorReleased)
+        {
+            this->isMouseLocked = !this->isMouseLocked;
+            this->setLockCursor(this->isMouseLocked);
+            this->isCursorReleased = false;
+        }
+        if (glfwGetKey(window, CURSOR) == GLFW_RELEASE && !this->isCursorReleased)
+        {
+            this->isCursorReleased = true;
+        }
 
-        // Update the mouse, it takes the raw mouse data and handles it internally as needed
-        double mouseX;
-        double mouseY;
-        glfwGetCursorPos(window, &mouseX, &mouseY);
-        this->camera.updateMouseInput(dt, mouseX, mouseY);
+        if (this->isMouseLocked)
+        {
+            // Update the mouse, it takes the raw mouse data and handles it internally as needed
+            double mouseX;
+            double mouseY;
+            glfwGetCursorPos(window, &mouseX, &mouseY);
+            this->camera.updateMouseInput(dt, mouseX, mouseY);
+        }
+        else 
+        {
+            this->camera.firstMouse = true;
+        }
 
         // Instead of updating after every change it just updates it manually at the end
         this->camera.updateViewMatrix();

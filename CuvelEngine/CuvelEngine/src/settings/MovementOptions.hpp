@@ -11,7 +11,4 @@
 #define RIGHT GLFW_KEY_D
 #define UP GLFW_KEY_SPACE
 #define DOWN GLFW_KEY_LEFT_SHIFT
-
-//movement
-#define MOVEMENT_SPEED 5.0f
-#define MOUSE_SENSITIVITY 6.0f
+#define CURSOR GLFW_KEY_ESCAPE

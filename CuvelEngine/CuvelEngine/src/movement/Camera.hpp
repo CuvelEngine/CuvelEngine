@@ -1,4 +1,5 @@
 #pragma once
+#include "imgui/ImguiManager.hpp"
 #include "settings/MovementOptions.hpp"
 
 namespace cuvel
@@ -19,7 +20,7 @@ namespace cuvel
 	// The camera class!! It will simply handle the math and store the resulting viewMatrix that
 	// will be used in the shader. Does not handle inputs directly so they have to be given
 	// from outside
-	class Camera
+	class Camera : public ImguiCompatible
 	{
 	public:
 		void teleport(glm::vec3 pos, glm::vec3 front);
@@ -28,7 +29,10 @@ namespace cuvel
 		void updateKeyboardInput(const float_t& dt, const Directions dir);
 		void updateMouseInput(const float_t& dt, const double& mouseX, const double& mouseY);
 
+		void imguiWindow() override;
+
 		glm::mat4 viewMatrix{ 1.0f };
+		bool firstMouse = true;
 	private:
 		glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
 		glm::vec3 pos{ 0.0f, 0.0f, 1.0f };
@@ -44,7 +48,9 @@ namespace cuvel
 		double lastMouseY = 0.0;
 		double mouseOffsetX = 0.0;
 		double mouseOffsetY = 0.0;
-		bool   firstMouse = true;
+
+		float mouseSensitivity = 5;
+		float movementSpeed = 6;
 	};
 }
 
