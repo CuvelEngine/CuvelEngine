@@ -9,7 +9,7 @@ namespace cuvel
 	struct Vertex
 	{
 		glm::vec3 position;
-		glm::vec4 color;
+		glm::u8vec4 color;
 	};
 
 	// Base structure containing the buffers of a model.

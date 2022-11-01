@@ -165,7 +165,7 @@ namespace cuvel
 		// seeing you after image. Normally you paint everything with skyboxes and models
 		// so games don't do it. But when you go out of bounds they don't have stuff to paint
 		// and thus earlier frames are still there
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(CLEARCOLOR, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		this->drawCalls = 0;

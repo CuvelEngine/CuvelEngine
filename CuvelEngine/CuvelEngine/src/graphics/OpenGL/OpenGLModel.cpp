@@ -33,9 +33,10 @@ namespace cuvel
 		glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, position)));
 		glEnableVertexAttribArray(attribLoc);
 
-		// Same thing with color
+		// Same thing with color. This time it's 4 unsigned bytes, and the GL_TRUE is signed
+		// because we want to have it normalized
 		attribLoc = glGetAttribLocation(coreProgram, "color");
-		glVertexAttribPointer(attribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, color)));
+		glVertexAttribPointer(attribLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, color)));
 		glEnableVertexAttribArray(attribLoc);
 	}
 
