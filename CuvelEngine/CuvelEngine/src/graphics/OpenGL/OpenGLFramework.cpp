@@ -11,6 +11,30 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 {
 	std::cout << "---------------------opengl-callback-start------------" << std::endl;
 	std::cout << "message: " << message << std::endl;
+	std::cout << "source: ";
+	switch (source)
+	{
+	case GL_DEBUG_SOURCE_API:
+		std::cout << "API";
+		break;
+	case GL_DEBUG_SOURCE_APPLICATION:
+		std::cout << "APPLICATION";
+		break;
+	case GL_DEBUG_SOURCE_OTHER:
+		std::cout << "OTHER";
+		break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:
+		std::cout << "SHADER COMPILER";
+		break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:
+		std::cout << "THIRD PARTY";
+		break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+		std::cout << "WINDOW SYSTEM";
+		break;
+	}
+	std::cout << std::endl;
+
 	std::cout << "type: ";
 	switch (type) {
 	case GL_DEBUG_TYPE_ERROR:
