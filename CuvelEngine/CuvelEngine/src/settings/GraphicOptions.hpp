@@ -27,6 +27,8 @@
 #define GEOMETRY_LOCATION ""
 
 // OPENGL
+#define GLSTOPERROR true
+
 #define GLMAYOR 4
 #define GLMINOR 5
 #define GLSAMPLES 16

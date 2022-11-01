@@ -54,6 +54,10 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 	}
 	std::cout << std::endl;
 	std::cout << "---------------------opengl-callback-end--------------" << std::endl;
+	if (GLSTOPERROR && type == GL_DEBUG_TYPE_ERROR)
+	{
+		__debugbreak();
+	}
 }
 
 // You can also ignore this, it's just a callback for when the window is resized
@@ -100,6 +104,7 @@ namespace cuvel
 		// This is so OpenGL tells us when things go wrong
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(openglCallbackFunction, 0);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		// Disable the notification severity level, we only care about warnings and errors
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		
