@@ -17,7 +17,7 @@ namespace cuvel
 		~OpenGLFramework() override;
 
 		void update(const float_t& dt) override;
-		void event(const float_t& dt) override;
+		void event(KeyMapper* keyMapper, const float_t& dt) override;
 		void render() override;
 
 		void addModel(uint32_t id, Mesh mesh) override;

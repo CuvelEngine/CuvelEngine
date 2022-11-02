@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "movement/KeyMapper.hpp"
+
 namespace cuvel
 {
     bool GraphicFramework::initglfw()
@@ -38,14 +40,18 @@ namespace cuvel
         this->projMatrix = glm::perspective(glm::radians(FOV), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
     }
 
-    void GraphicFramework::setLockCursor(const bool lock)
+    void GraphicFramework::setLockCursor()
     {
-        if (lock)
-            // Mouse is locked and hidden
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        const int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
+        if (cursorState == GLFW_CURSOR_DISABLED)
+        {
+            glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
         else
-            // Mouse can move freely
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        {
+            this->camera.firstMouse = true;
+            glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
     }
 
     std::string GraphicFramework::loadShaderSrc(const std::string& file)
@@ -76,48 +82,14 @@ namespace cuvel
     }
 
     // This basic function will use glfw to get keyboard inputs and update mouse inputs
-    void GraphicFramework::event(const float_t& dt)
+    void GraphicFramework::event(KeyMapper* keyMapper, const float_t& dt)
     {
         glfwPollEvents();
 
-        // Simply go through each relevant key and edit the camera if it is triggered
-        // TODO: Improve for greater flexibility
-        if (glfwGetKey(window, FORW) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::forward);
-        }
-        if (glfwGetKey(window, BACKW) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::backward);
-        }
-        if (glfwGetKey(window, LEFT) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::left);
-        }
-        if (glfwGetKey(window, RIGHT) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::right);
-        }
-        if (glfwGetKey(window, UP) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::up);
-        }
-        if (glfwGetKey(window, DOWN) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::down);
-        }
-        if (glfwGetKey(window, CURSOR) == GLFW_PRESS && this->isCursorReleased)
-        {
-            this->isMouseLocked = !this->isMouseLocked;
-            this->setLockCursor(this->isMouseLocked);
-            this->isCursorReleased = false;
-        }
-        if (glfwGetKey(window, CURSOR) == GLFW_RELEASE && !this->isCursorReleased)
-        {
-            this->isCursorReleased = true;
-        }
+        keyMapper->executeKeyMaps(dt);
 
-        if (this->isMouseLocked)
+        const int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
+        if (cursorState == GLFW_CURSOR_DISABLED)
         {
             // Update the mouse, it takes the raw mouse data and handles it internally as needed
             double mouseX;
@@ -138,6 +110,11 @@ namespace cuvel
     int GraphicFramework::isWindowClosing()
     {
         return glfwWindowShouldClose(window);
+    }
+
+    bool GraphicFramework::isKeyPressed(const int key)
+    {
+        return glfwGetKey(this->window, key) == GLFW_PRESS;
     }
 }
 

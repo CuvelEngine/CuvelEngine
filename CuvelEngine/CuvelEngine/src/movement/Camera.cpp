@@ -1,8 +1,5 @@
 #include "Camera.hpp"
 
-#include <GL/glew.h>
-
-
 namespace cuvel
 {
 	// change position and the direction where character is looking
@@ -31,11 +28,11 @@ namespace cuvel
 		case Directions::backward:
 			pos -= front * this->movementSpeed * dt;
 			break;
-		case Directions::left:
-			pos -= right * this->movementSpeed * dt;
-			break;
 		case Directions::right:
 			pos += right * this->movementSpeed * dt;
+			break;
+		case Directions::left:
+			pos -= right * this->movementSpeed * dt;
 			break;
 		case Directions::up:
 			pos += worldUp * this->movementSpeed * dt;

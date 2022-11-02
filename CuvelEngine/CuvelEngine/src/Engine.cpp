@@ -4,6 +4,8 @@
 
 #include "graphics/OpenGL/OpenGLFramework.hpp"
 #include "imgui/ImguiManager.hpp"
+#include "movement/KeyMapper.hpp"
+
 Engine::Engine(const GLibrary lib): dt(0), curTime(0), lastTime(0)
 {
 	// Imgui must be initialized before anything else
@@ -22,8 +24,11 @@ Engine::Engine(const GLibrary lib): dt(0), curTime(0), lastTime(0)
 		throw std::exception("Graphics library not recognized");
 	}
 
-	// Add the window data to the manager
-	this->addWindows();
+	// Add context to the KeyMapper so it can interact with the components
+	this->keyMapper = new cuvel::KeyMapper(this->gFramework);
+	
+	this->addImguiWindows();
+	this->addKeyMaps();
 
 	// Hook imgui to the specific rendering library
 	this->gFramework->setupImgui();
@@ -44,6 +49,7 @@ Engine::~Engine()
 	this->gFramework->destroyImgui();
 	delete this->imguiManager;
 	delete this->gFramework;
+	delete this->keyMapper;
 }
 
 void Engine::run()
@@ -53,7 +59,7 @@ void Engine::run()
 	{
 		// Detect input and modify data accordingly
 		this->updateDt();
-		this->gFramework->event(this->dt);
+		this->gFramework->event(this->keyMapper, this->dt);
 		this->gFramework->update(this->dt);
 
 		// Update imgui
@@ -65,7 +71,7 @@ void Engine::run()
 	}
 }
 
-void Engine::addWindows()
+void Engine::addImguiWindows()
 {
 	// Rendering debug window
 	this->imguiManager->addWindow(
@@ -78,6 +84,17 @@ void Engine::addWindows()
 		"Controls",
 		&this->gFramework->camera,
 		{ 10, 160 }, { 250, 180 });
+}
+
+void Engine::addKeyMaps()
+{
+	this->keyMapper->addKeyMap(GLFW_KEY_W, &cuvel::KeyMapper::move, true, "forward");
+	this->keyMapper->addKeyMap(GLFW_KEY_S, &cuvel::KeyMapper::move, true, "backward");
+	this->keyMapper->addKeyMap(GLFW_KEY_A, &cuvel::KeyMapper::move, true, "left");
+	this->keyMapper->addKeyMap(GLFW_KEY_D, &cuvel::KeyMapper::move, true, "right");
+	this->keyMapper->addKeyMap(GLFW_KEY_SPACE, &cuvel::KeyMapper::move, true, "up");
+	this->keyMapper->addKeyMap(GLFW_KEY_LEFT_CONTROL, &cuvel::KeyMapper::move, true, "down");
+	this->keyMapper->addKeyMap(GLFW_KEY_ESCAPE, &cuvel::KeyMapper::lockCursor, false);
 }
 
 void Engine::updateDt()

@@ -1,6 +1,7 @@
 #pragma once
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "imgui/ImguiManager.hpp"
-#include "settings/MovementOptions.hpp"
 
 namespace cuvel
 {
@@ -42,7 +43,6 @@ namespace cuvel
 
 		float_t pitch = 0;
 		float_t yaw = 0;
-		float_t roll = 0;
 
 		double lastMouseX = 0.0;
 		double lastMouseY = 0.0;
