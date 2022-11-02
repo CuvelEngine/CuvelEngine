@@ -55,7 +55,6 @@ namespace cuvel
 
 		// Camera class that will beautifully handle the viewMatrix
 		Camera camera;
-		GLFWwindow* window = nullptr;
 	protected:
 		static bool initglfw();
 		bool createWindow();
@@ -70,5 +69,7 @@ namespace cuvel
 
 		// Matrix that is going to be sent to the shaders so the 3D space actually makes sense
 		glm::mat4 projMatrix{1.f};
+
+		GLFWwindow* window = nullptr;
 	};
 }

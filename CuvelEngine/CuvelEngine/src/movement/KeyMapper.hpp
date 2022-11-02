@@ -6,17 +6,12 @@ namespace cuvel
 	class GraphicFramework;
 	class KeyMapper;
 
+	// Weird hack to be able to use non-static methods as pointers
 	typedef void (KeyMapper::*KeyMapAction) (const std::string&, const std::string&, float);
 
-	struct KeyMap
-	{
-		KeyMapAction action;
-		std::string param1;
-		std::string param2;
-		bool canBeHeld;
-		bool released;
-	};
-
+	// Main class in charge of handling keymappings and executing its behavior.
+	// Potentially the class with the most capability to destroy modularity :P
+	// Let's try to avoid that for now tho
 	class KeyMapper
 	{
 	public:
@@ -44,7 +39,23 @@ namespace cuvel
 		// ---------------------------------------------------------------------------
 
 	private:
+		// Structure with the basic keymappings
+		struct KeyMap
+		{
+			KeyMapAction action;
+			std::string param1;
+			std::string param2;
+			bool canBeHeld;
+			bool released;
+		};
+
+		// External dependencies
+		// ---------------------------------------------------------------------------
 		GraphicFramework* gFram = nullptr;
+
+		// ---------------------------------------------------------------------------
+
+		// Each keymapping is linked to the keyboard input as key
 		std::unordered_map<int, KeyMap> keyMaps;
 	};
 }

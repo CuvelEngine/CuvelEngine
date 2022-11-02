@@ -5,6 +5,7 @@
 
 namespace cuvel
 {
+	// Must be executed before anything else (I think)
 	ImguiManager::ImguiManager()
 	{
 		IMGUI_CHECKVERSION();

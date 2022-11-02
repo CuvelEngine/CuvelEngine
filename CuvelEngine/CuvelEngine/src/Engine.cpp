@@ -88,12 +88,16 @@ void Engine::addImguiWindows()
 
 void Engine::addKeyMaps()
 {
+	// Movement controls
 	this->keyMapper->addKeyMap(GLFW_KEY_W, &cuvel::KeyMapper::move, true, "forward");
 	this->keyMapper->addKeyMap(GLFW_KEY_S, &cuvel::KeyMapper::move, true, "backward");
 	this->keyMapper->addKeyMap(GLFW_KEY_A, &cuvel::KeyMapper::move, true, "left");
 	this->keyMapper->addKeyMap(GLFW_KEY_D, &cuvel::KeyMapper::move, true, "right");
 	this->keyMapper->addKeyMap(GLFW_KEY_SPACE, &cuvel::KeyMapper::move, true, "up");
 	this->keyMapper->addKeyMap(GLFW_KEY_LEFT_CONTROL, &cuvel::KeyMapper::move, true, "down");
+
+	// Press Esc to free the mouse so you can modify the Imgui windows and
+	// get out of the program
 	this->keyMapper->addKeyMap(GLFW_KEY_ESCAPE, &cuvel::KeyMapper::lockCursor, false);
 }
 

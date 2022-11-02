@@ -19,7 +19,12 @@ namespace cuvel
 
 	void KeyMapper::addKeyMap(int key, const KeyMapAction action, const bool canBeHeld, std::string param1, std::string param2)
 	{
-		cuvel::KeyMap keyMap = { action, std::move(param1), std::move(param2), canBeHeld, false };
+		if (this->keyMaps.contains(key))
+		{
+			const std::string excepStr = "Duplicated entry for key " + key;
+			throw std::exception(excepStr.c_str());
+		}
+		KeyMap keyMap = { action, std::move(param1), std::move(param2), canBeHeld, false };
 		this->keyMaps.emplace(key, keyMap);
 	}
 
@@ -28,11 +33,16 @@ namespace cuvel
 		// Simply go through each relevant key and edit the camera if it is triggered
 		for (auto& [key, map]: KeyMapper::keyMaps)
 		{
+			// The key must be pressed. If the mapping is anti-holding and it's been held
+			// we avoid executing the function
 			if (this->gFram->isKeyPressed(key) && (map.canBeHeld || map.released))
 			{
+				// This weird thing calls the function pointer through the KeyMapper object
 				(this->*map.action)(map.param1, map.param2, dt);
 				map.released = false;
 			}
+			// When the user releases the key we can allow the function to be called in the
+			// next press
 			else if (!this->gFram->isKeyPressed(key))
 			{
 				map.released = true;
