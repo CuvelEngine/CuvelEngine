@@ -11,6 +11,30 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 {
 	std::cout << "---------------------opengl-callback-start------------" << std::endl;
 	std::cout << "message: " << message << std::endl;
+	std::cout << "source: ";
+	switch (source)
+	{
+	case GL_DEBUG_SOURCE_API:
+		std::cout << "API";
+		break;
+	case GL_DEBUG_SOURCE_APPLICATION:
+		std::cout << "APPLICATION";
+		break;
+	case GL_DEBUG_SOURCE_OTHER:
+		std::cout << "OTHER";
+		break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:
+		std::cout << "SHADER COMPILER";
+		break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:
+		std::cout << "THIRD PARTY";
+		break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+		std::cout << "WINDOW SYSTEM";
+		break;
+	}
+	std::cout << std::endl;
+
 	std::cout << "type: ";
 	switch (type) {
 	case GL_DEBUG_TYPE_ERROR:
@@ -54,6 +78,10 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 	}
 	std::cout << std::endl;
 	std::cout << "---------------------opengl-callback-end--------------" << std::endl;
+	if (GLSTOPERROR && type == GL_DEBUG_TYPE_ERROR)
+	{
+		__debugbreak();
+	}
 }
 
 // You can also ignore this, it's just a callback for when the window is resized
@@ -100,6 +128,7 @@ namespace cuvel
 		// This is so OpenGL tells us when things go wrong
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(openglCallbackFunction, 0);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		// Disable the notification severity level, we only care about warnings and errors
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		
@@ -160,7 +189,7 @@ namespace cuvel
 		// seeing you after image. Normally you paint everything with skyboxes and models
 		// so games don't do it. But when you go out of bounds they don't have stuff to paint
 		// and thus earlier frames are still there
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(CLEARCOLOR, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		this->drawCalls = 0;
