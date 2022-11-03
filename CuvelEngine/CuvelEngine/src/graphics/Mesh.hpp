@@ -8,7 +8,7 @@ namespace cuvel
 	// The basic structure containing the data for each vertex
 	struct Vertex
 	{
-		glm::vec3 position;
+		glm::u8vec3 position;
 		glm::u8vec4 color;
 	};
 
