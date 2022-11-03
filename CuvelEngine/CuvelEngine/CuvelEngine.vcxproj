@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\movement\KeyMapper.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\imgui\ImguiManager.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\movement\KeyMapper.hpp" />
     <ClInclude Include="src\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="src\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="src\imgui\backends\imgui_impl_opengl3_loader.h" />
@@ -157,7 +159,6 @@
     <ClInclude Include="src\settings\GraphicOptions.hpp" />
     <ClInclude Include="src\graphics\OpenGL\OpenGLFramework.hpp" />
     <ClInclude Include="src\graphics\GraphicFramework.hpp" />
-    <ClInclude Include="src\settings\MovementOptions.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\graphics\shaders\fragment.glsl" />

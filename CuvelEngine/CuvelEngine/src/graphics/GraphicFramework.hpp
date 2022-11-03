@@ -14,6 +14,8 @@ enum GLibrary
 
 namespace cuvel
 {
+	class KeyMapper;
+
 	//Interface for the Graphics framework, will be inherited by each graphics
 	//library implementation.
 	// TODO: see if this is actually a good set of functions for the template
@@ -26,7 +28,7 @@ namespace cuvel
 		virtual void update(const float_t& dt) = 0;
 
 		// process inputs between frames
-		virtual void event(const float_t& dt);
+		virtual void event(KeyMapper* keyMapper, const float_t& dt);
 
 		// render new frame
 		virtual void render() = 0;
@@ -42,8 +44,14 @@ namespace cuvel
 
 		void imguiWindow() override = 0;
 
+		// ------------------------------------------------------------------------
+		// ----------------------- End of virtual functions -----------------------
+		// ------------------------------------------------------------------------
+
 		// Check if the window is closed
 		int isWindowClosing();
+		bool isKeyPressed(int key);
+		void setLockCursor();
 
 		// Camera class that will beautifully handle the viewMatrix
 		Camera camera;
@@ -52,8 +60,6 @@ namespace cuvel
 		bool createWindow();
 		void initProjection(bool invertedY);
 
-		void setLockCursor(bool lock);
-
 		//TODO: Not sure if Vulkan can use this. May have to move into OpenGLFramework
 		static std::string loadShaderSrc(const std::string& file);
 
@@ -61,12 +67,9 @@ namespace cuvel
 		int32_t fbwidth = 0;
 		int32_t fbheight = 0;
 
-		GLFWwindow* window = nullptr;
-
 		// Matrix that is going to be sent to the shaders so the 3D space actually makes sense
 		glm::mat4 projMatrix{1.f};
 
-		bool isMouseLocked = true;
-		bool isCursorReleased{};
+		GLFWwindow* window = nullptr;
 	};
 }

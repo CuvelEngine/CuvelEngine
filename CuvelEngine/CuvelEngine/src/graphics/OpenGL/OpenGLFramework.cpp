@@ -152,7 +152,7 @@ namespace cuvel
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// This is what traps the mouse in the window and hides it.
-		this->setLockCursor(true);
+		this->setLockCursor();
 
 		this->shader = new Shader(VERTEX_LOCATION, FRAGMENT_LOCATION, GEOMETRY_LOCATION);
 		glUseProgram(this->shader->id);
@@ -177,9 +177,9 @@ namespace cuvel
 	}
 
 	// For now nothing weird has to be done processing inputs so it just calls the parent function
-	void OpenGLFramework::event(const float_t& dt)
+	void OpenGLFramework::event(KeyMapper* keyMapper, const float_t& dt)
 	{
-		this->GraphicFramework::event(dt);
+		this->GraphicFramework::event(keyMapper, dt);
 	}
 
 	void OpenGLFramework::render()

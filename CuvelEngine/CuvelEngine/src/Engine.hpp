@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics/GraphicFramework.hpp"
 #include "imgui/ImguiManager.hpp"
+#include "movement/KeyMapper.hpp"
 
 // Main class of the system. It literally just initiates everything then run the loop
 // Doesn't do much for now tbh
@@ -11,7 +12,8 @@ public:
 	~Engine();
 	void run();
 
-	void addWindows();
+	void addImguiWindows();
+	void addKeyMaps();
 
 	float dt;
 private:
@@ -22,5 +24,6 @@ private:
 
 	cuvel::GraphicFramework* gFramework;
 	cuvel::ImguiManager* imguiManager;
+	cuvel::KeyMapper* keyMapper;
 };
 
