@@ -15,7 +15,7 @@
 
 // window
 #define RESIZABLE true
-#define CLEARCOLOR 0.1f, 0.1f, 0.1f
+#define CLEARCOLOR 0.1f, 0.1f, 0.3f
 
 // Projection
 #define FOV 90.0f

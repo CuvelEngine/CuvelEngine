@@ -34,15 +34,9 @@ Engine::Engine(const GLibrary lib): dt(0), curTime(0), lastTime(0)
 	// Hook imgui to the specific rendering library
 	this->gFramework->setupImgui();
 
-	// Im just testing a triangle, might delete later UwU
-	cuvel::Mesh mesh{};
-	mesh.vertices.push_back({ glm::u8vec3(0, 0, 0), glm::u8vec4(0, 0, 0, 255) });
-	mesh.vertices.push_back({ glm::u8vec3(2, 0, 0), glm::u8vec4(128, 0, 0, 255) });
-	mesh.vertices.push_back({ glm::u8vec3(1, 2, 0), glm::u8vec4(255, 0, 0, 255) });
-	mesh.indices.push_back(0);
-	mesh.indices.push_back(1);
-	mesh.indices.push_back(2);
-	this->gFramework->addModel(0, mesh);
+	// Making a cube for testing
+	this->gFramework->addModel(0, makeCube(), true);
+	this->gFramework->addModel(1, makeCube(), false);
 }
 
 Engine::~Engine()
@@ -78,13 +72,13 @@ void Engine::addImguiWindows()
 	this->imguiManager->addWindow(
 		"Render",
 		this->gFramework,
-		{ 10, 30 }, { 250, 120 });
+		{ 10, 30 }, { 450, 200 });
 
 	// Camera controls window
 	this->imguiManager->addWindow(
 		"Controls",
 		&this->gFramework->camera,
-		{ 10, 160 }, { 250, 180 });
+		{ 10, 240 }, { 450, 180 });
 }
 
 void Engine::addKeyMaps()

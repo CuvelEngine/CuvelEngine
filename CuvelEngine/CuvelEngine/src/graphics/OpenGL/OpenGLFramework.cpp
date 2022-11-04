@@ -169,11 +169,17 @@ namespace cuvel
 
 	void OpenGLFramework::update(const float_t& dt)
 	{
+		this->models.at(1)->translate(glm::normalize(this->lightDir) * 10.0f);
+
 		// Update the view matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ViewMatrix"), 1, false, glm::value_ptr(this->camera.viewMatrix));
 
 		// Update the projection matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ProjectionMatrix"), 1, false, glm::value_ptr(this->projMatrix));
+
+		// Update the projection matrix uniform
+		glUniform3fv(glGetUniformLocation(this->shader->id, "lightDir"), 1, glm::value_ptr(this->lightDir));
+
 	}
 
 	// For now nothing weird has to be done processing inputs so it just calls the parent function
@@ -212,10 +218,10 @@ namespace cuvel
 		glFlush();
 	}
 
-	void OpenGLFramework::addModel(uint32_t id, const Mesh mesh)
+	void OpenGLFramework::addModel(uint32_t id, const Mesh mesh, const bool hasLighting)
 	{
 		// self explanatory
-		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id));
+		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id, hasLighting));
 	}
 
 	void OpenGLFramework::setupImgui()
@@ -244,6 +250,8 @@ namespace cuvel
 		ImGui::Text("Draw calls: %d", this->drawCalls);
 		ImGui::Text("Vertices: %d", this->vertices);
 		ImGui::Text("Indices: %d", this->indices);
+		ImGui::Separator();
+		ImGui::SliderFloat3("Light direction", glm::value_ptr(this->lightDir), -1, 1);
 	}
 
 	OpenGLFramework::Shader::Shader(const std::string& vertex, const std::string& fragment, const std::string& geometry)
