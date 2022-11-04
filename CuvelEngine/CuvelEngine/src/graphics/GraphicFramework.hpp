@@ -35,7 +35,7 @@ namespace cuvel
 
 		// add a model to the rendering model buffer
 		// Each model must have an ID associated, management left to the implementation
-		virtual void addModel(uint32_t id, Mesh mesh) = 0;
+		virtual void addModel(uint32_t id, Mesh mesh, bool hasLighting) = 0;
 
 		// Imgui handling
 		virtual void setupImgui() = 0;
@@ -69,6 +69,9 @@ namespace cuvel
 
 		// Matrix that is going to be sent to the shaders so the 3D space actually makes sense
 		glm::mat4 projMatrix{1.f};
+
+		// Light source
+		glm::vec3 lightDir{1.0f};
 
 		GLFWwindow* window = nullptr;
 	};

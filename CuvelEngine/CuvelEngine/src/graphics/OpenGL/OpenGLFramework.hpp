@@ -20,7 +20,7 @@ namespace cuvel
 		void event(KeyMapper* keyMapper, const float_t& dt) override;
 		void render() override;
 
-		void addModel(uint32_t id, Mesh mesh) override;
+		void addModel(uint32_t id, Mesh mesh, bool hasLighting) override;
 
 		void setupImgui() override;
 		void newFrameImgui() override;

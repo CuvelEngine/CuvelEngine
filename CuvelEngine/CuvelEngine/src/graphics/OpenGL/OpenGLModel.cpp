@@ -1,14 +1,13 @@
 #include "OpenGLModel.hpp"
 
-#include <utility>
-
 namespace cuvel
 {
-	OpenGLModel::OpenGLModel(Mesh mesh, uint32_t coreProgram)
+	OpenGLModel::OpenGLModel(Mesh mesh, const uint32_t coreProgram, const bool hasLighting)
 	{
 		// Simply move the given mesh into the model
 		this->mesh = std::move(mesh);
 		this->coreProgram = coreProgram;
+		this->hasLighting = hasLighting ? 1 : 0;
 
 		// Tell OpenGL to create 1 vertexArray
 		glCreateVertexArrays(1, &VAO);
@@ -38,6 +37,12 @@ namespace cuvel
 		attribLoc = glGetAttribLocation(coreProgram, "color");
 		glVertexAttribPointer(attribLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, color)));
 		glEnableVertexAttribArray(attribLoc);
+
+		// We finally add the normal index
+		attribLoc = glGetAttribLocation(coreProgram, "normalIndex");
+		glVertexAttribIPointer(attribLoc, 1, GL_UNSIGNED_BYTE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, normal)));
+		glEnableVertexAttribArray(attribLoc);
+		this->mesh.updateMatrices();
 	}
 
 	OpenGLModel::~OpenGLModel()
@@ -52,6 +57,13 @@ namespace cuvel
 	{
 		// Update the model matrix uniform for this model
 		glUniformMatrix4fv(glGetUniformLocation(this->coreProgram, "ModelMatrix"), 1, false, glm::value_ptr(this->mesh.getModelMatrix()));
+
+		// Update the normal matrix as well
+		glUniformMatrix3fv(glGetUniformLocation(this->coreProgram, "NormalMatrix"), 1, false, glm::value_ptr(this->mesh.getNormalMatrix()));
+
+		// Update the lighting flag
+		glUniform1ui(glGetUniformLocation(this->coreProgram, "hasLighting"), this->hasLighting);
+
 	}
 
 	void OpenGLModel::render()
@@ -66,5 +78,11 @@ namespace cuvel
 	{
 		*vertices += this->mesh.vertices.size();
 		*indices += this->mesh.indices.size();
+	}
+	void OpenGLModel::translate(const glm::vec3 newPos)
+	{
+		if (this->mesh.position == newPos) return;
+		this->mesh.position = newPos;
+		this->mesh.updateMatrices();
 	}
 }
