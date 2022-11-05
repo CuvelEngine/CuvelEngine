@@ -110,21 +110,23 @@ namespace cuvel
 		// compute and test the Z coordinate
 		float pcz = glm::dot(v, this->front);
 		if (pcz > this->farPlane || pcz < this->nearPlane)
-
+		{
 			return(OUTSIDE);
-
+		}
 		// compute and test the Y coordinate
 		float pcy = glm::dot(v, this->up);
 		float aux = pcz * this->tang;
 		if (pcy > aux || pcy < -aux)
+		{
 			return(OUTSIDE);
-
+		}
 		// compute and test the X coordinate
 		float pcx = glm::dot(v, this->right);
 		aux = aux * this->aspectRatio;
 		if (pcx > aux || pcx < -aux)
+		{
 			return(OUTSIDE);
-
+		}
 		return(INSIDE);
 	}
 
