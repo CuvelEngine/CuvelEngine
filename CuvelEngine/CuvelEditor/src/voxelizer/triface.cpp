@@ -62,40 +62,6 @@ bool TriFace::intersectWithLine(glm::vec3 ray, glm::vec3 origin, glm::vec3 &inte
     return true;
 }
 
-void obj(VoxelPos pos)
-{
-    glm::vec3 v1, v2, v3, v4, v5, v6, v7, v8;
-
-    glm::vec3 v = glm::vec3(pos.x, pos.y, pos.z);
-
-    v1 = v + glm::vec3(-0.5,0.5,-0.5);
-    v2 = v + glm::vec3(-0.5,0.5,0.5);
-    v3 = v + glm::vec3(0.5,0.5,0.5);
-    v4 = v + glm::vec3(0.5,0.5,-0.5);
-    v5 = v + glm::vec3(-0.5,-0.5,-0.5);
-    v6 = v + glm::vec3(-0.5,-0.5,0.5);
-    v7 = v + glm::vec3(0.5,-0.5,0.5);
-    v8 = v + glm::vec3(0.5,-0.5,-0.5);
-
-    std::cout << "v " << v1.x << " " << v1.y << " " << v1.z << '\n';
-    std::cout << "v " << v2.x << " " << v2.y << " " << v2.z << '\n';
-    std::cout << "v " << v3.x << " " << v3.y << " " << v3.z << '\n';
-    std::cout << "v " << v4.x << " " << v4.y << " " << v4.z << '\n';
-    std::cout << "v " << v5.x << " " << v5.y << " " << v5.z << '\n';
-    std::cout << "v " << v6.x << " " << v6.y << " " << v6.z << '\n';
-    std::cout << "v " << v7.x << " " << v7.y << " " << v7.z << '\n';
-    std::cout << "v " << v8.x << " " << v8.y << " " << v8.z << '\n';
-
-    std::cout << "f " << counter + 1 << " " << counter + 2 << " " << counter + 3 << " " << counter + 4 << " " << '\n';
-    std::cout << "f " << counter + 5 << " " << counter + 6 << " " << counter + 7 << " " << counter + 8 << " " << '\n';
-    std::cout << "f " << counter + 1 << " " << counter + 4 << " " << counter + 8 << " " << counter + 5 << " " << '\n';
-    std::cout << "f " << counter + 1 << " " << counter + 2 << " " << counter + 6 << " " << counter + 5 << " " << '\n';
-    std::cout << "f " << counter + 2 << " " << counter + 3 << " " << counter + 7 << " " << counter + 6 << " " << '\n';
-    std::cout << "f " << counter + 4 << " " << counter + 3 << " " << counter + 7 << " " << counter + 8 << " " << '\n';
-
-    counter += 8;
-}
-
 std::vector<VoxelPos> TriFace::voxelize()
 {
 

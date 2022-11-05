@@ -38,9 +38,8 @@ void Voxelizer::voxelize(int resolution)
 
     for (auto & v : voxels)
     {
-        if (tmp.find(v.pos) == tmp.end())
+        if (!tmp.contains(v.pos))
         {
-            obj(v);
             tmp.insert(v.pos);
         }
     }

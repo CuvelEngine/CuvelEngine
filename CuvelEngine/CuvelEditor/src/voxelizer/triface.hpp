@@ -14,5 +14,3 @@ struct TriFace
     bool intersectWithLine(glm::vec3 ray, glm::vec3 origin, glm::vec3 &intersection) const;
     std::vector<VoxelPos> voxelize();
 };
-
-void obj(VoxelPos pos);
