@@ -1,8 +1,10 @@
 #include "OpenGLModel.hpp"
 
+#include <glm/gtx/vector_angle.hpp>
+
 namespace cuvel
 {
-	OpenGLModel::OpenGLModel(Mesh mesh, const uint32_t coreProgram, const bool hasLighting)
+	OpenGLModel::OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting)
 	{
 		// Simply move the given mesh into the model
 		this->mesh = std::move(mesh);
@@ -79,10 +81,24 @@ namespace cuvel
 		*vertices += this->mesh.vertices.size();
 		*indices += this->mesh.indices.size();
 	}
-	void OpenGLModel::translate(const glm::vec3 newPos)
+	void OpenGLModel::translate(glm::vec3 newPos)
 	{
 		if (this->mesh.position == newPos) return;
 		this->mesh.position = newPos;
 		this->mesh.updateMatrices();
 	}
+
+	bool OpenGLModel::isInsideClippingPlane(Camera* cam)
+	{
+		// Every corner has to be outside of the clipping plane for the model to be culled
+		for (glm::vec3& corner : this->mesh.corners)
+		{
+			if (cam->pointInFrustum(corner) != FrustResult::OUTSIDE)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
+

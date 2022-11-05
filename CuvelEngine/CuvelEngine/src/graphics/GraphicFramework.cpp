@@ -37,12 +37,17 @@ namespace cuvel
 
         // Papa GLM does everything for us :D
     	glm::mat4 ProjectionMatrix(1.0f);
-        this->projMatrix = glm::perspective(glm::radians(FOV), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
+        this->updateProjection();
+    }
+
+    void GraphicFramework::updateProjection()
+    {
+        this->projMatrix = glm::perspective(glm::radians(cuvel::Camera::FOVy), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
     }
 
     void GraphicFramework::setLockCursor()
     {
-        const int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
+        int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
         if (cursorState == GLFW_CURSOR_DISABLED)
         {
             glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -82,13 +87,13 @@ namespace cuvel
     }
 
     // This basic function will use glfw to get keyboard inputs and update mouse inputs
-    void GraphicFramework::event(KeyMapper* keyMapper, const float_t& dt)
+    void GraphicFramework::event(KeyMapper* keyMapper, float_t& dt)
     {
         glfwPollEvents();
 
         keyMapper->executeKeyMaps(dt);
 
-        const int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
+        int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
         if (cursorState == GLFW_CURSOR_DISABLED)
         {
             // Update the mouse, it takes the raw mouse data and handles it internally as needed
@@ -112,7 +117,7 @@ namespace cuvel
         return glfwWindowShouldClose(window);
     }
 
-    bool GraphicFramework::isKeyPressed(const int key)
+    bool GraphicFramework::isKeyPressed(int key)
     {
         return glfwGetKey(this->window, key) == GLFW_PRESS;
     }

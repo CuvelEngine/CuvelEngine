@@ -18,7 +18,7 @@
 #define CLEARCOLOR 0.1f, 0.1f, 0.3f
 
 // Projection
-#define FOV 90.0f
+#define INITIAL_FOV 90.0f
 #define NEAR_PLANE 0.001f
 #define FAR_PLANE 1000.0f
 

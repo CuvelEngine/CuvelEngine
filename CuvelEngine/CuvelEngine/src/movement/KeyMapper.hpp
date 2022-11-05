@@ -7,7 +7,7 @@ namespace cuvel
 	class KeyMapper;
 
 	// Weird hack to be able to use non-static methods as pointers
-	typedef void (KeyMapper::*KeyMapAction) (const std::string&, const std::string&, float);
+	typedef void (KeyMapper::*KeyMapAction) (std::string&, std::string&, float);
 
 	// Main class in charge of handling keymappings and executing its behavior.
 	// Potentially the class with the most capability to destroy modularity :P
@@ -30,11 +30,11 @@ namespace cuvel
 
 		// Param1 -> direction name, follows the same words as Camera enum
 		// Param2 -> unused
-		void move(const std::string& param1, const std::string& param2, float dt);
+		void move(std::string& param1, std::string& param2, float dt);
 
 		// Param1 -> unused
 		// Param2 -> unused
-		void lockCursor(const std::string& param1, const std::string& param2, float dt);
+		void lockCursor(std::string& param1, std::string& param2, float dt);
 
 		// ---------------------------------------------------------------------------
 
