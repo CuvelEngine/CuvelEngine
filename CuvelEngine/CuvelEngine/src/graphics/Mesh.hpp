@@ -56,16 +56,10 @@ namespace cuvel
 
 		void calculateSize()
 		{
-			uint8_t mx = 0;
-			uint8_t my = 0;
-			uint8_t mz = 0;
 			for (auto& [pos, color, normal] : this->vertices)
 			{
-				mx = std::max(pos.x, mx);
-				my = std::max(pos.y, my);
-				mz = std::max(pos.z, mz);
+				glm::max(this->size, pos);
 			}
-			this->size = glm::u8vec3(mx, my, mz);
 		}
 
 		void updateCorners()

@@ -59,7 +59,6 @@ Engine::~Engine()
 
 void Engine::run()
 {
-	float renderTime = 0, inputTime = 0, updateTime = 0, imguiTime = 0;
 	// Each loop is one frame
 	while (!this->gFramework->isWindowClosing())
 	{
