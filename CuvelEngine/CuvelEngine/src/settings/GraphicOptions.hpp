@@ -15,6 +15,7 @@
 
 // window
 #define RESIZABLE true
+#define CLEARCOLOR 0.1f, 0.1f, 0.3f
 
 // Projection
 #define FOV 90.0f
@@ -27,6 +28,8 @@
 #define GEOMETRY_LOCATION ""
 
 // OPENGL
+#define GLSTOPERROR true
+
 #define GLMAYOR 4
 #define GLMINOR 5
 #define GLSAMPLES 16

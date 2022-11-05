@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "movement/KeyMapper.hpp"
+
 namespace cuvel
 {
     bool GraphicFramework::initglfw()
@@ -15,7 +17,7 @@ namespace cuvel
     bool GraphicFramework::createWindow()
     {
 
-        this->window = glfwCreateWindow(1280, 720, "Cuvel Engine", NULL, NULL);
+        this->window = glfwCreateWindow(1280, 720, "Cuvel Engine", nullptr, nullptr);
         if (!this->window)
         {
             glfwTerminate();
@@ -23,6 +25,9 @@ namespace cuvel
         }
 
         glfwMakeContextCurrent(window);
+
+        //This line of code disables VSync
+        //glfwSwapInterval(0);
         return true;
     }
 
@@ -33,6 +38,20 @@ namespace cuvel
         // Papa GLM does everything for us :D
     	glm::mat4 ProjectionMatrix(1.0f);
         this->projMatrix = glm::perspective(glm::radians(FOV), static_cast<float>(this->fbwidth) / this->fbheight, NEAR_PLANE, FAR_PLANE);
+    }
+
+    void GraphicFramework::setLockCursor()
+    {
+        const int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
+        if (cursorState == GLFW_CURSOR_DISABLED)
+        {
+            glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        else
+        {
+            this->camera.firstMouse = true;
+            glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
     }
 
     std::string GraphicFramework::loadShaderSrc(const std::string& file)
@@ -59,47 +78,29 @@ namespace cuvel
     // Destroy the window. This is called when children are destroyed too so it's perfect
     GraphicFramework::~GraphicFramework()
     {
-        std::cout << "Called parent destructor!!";
         glfwTerminate();
     }
 
     // This basic function will use glfw to get keyboard inputs and update mouse inputs
-    void GraphicFramework::event(const float_t& dt)
+    void GraphicFramework::event(KeyMapper* keyMapper, const float_t& dt)
     {
         glfwPollEvents();
 
-        // Simply go through each relevant key and edit the camera if it is triggered
-        // TODO: Improve for greater flexibility
-        if (glfwGetKey(window, FORW) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::forward);
-        }
-        if (glfwGetKey(window, BACKW) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::backward);
-        }
-        if (glfwGetKey(window, LEFT) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::left);
-        }
-        if (glfwGetKey(window, RIGHT) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::right);
-        }
-        if (glfwGetKey(window, UP) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::up);
-        }
-        if (glfwGetKey(window, DOWN) == GLFW_PRESS)
-        {
-            this->camera.updateKeyboardInput(dt, Directions::down);
-        }
+        keyMapper->executeKeyMaps(dt);
 
-        // Update the mouse, it takes the raw mouse data and handles it internally as needed
-        double mouseX;
-        double mouseY;
-        glfwGetCursorPos(window, &mouseX, &mouseY);
-        this->camera.updateMouseInput(dt, mouseX, mouseY);
+        const int cursorState = glfwGetInputMode(this->window, GLFW_CURSOR);
+        if (cursorState == GLFW_CURSOR_DISABLED)
+        {
+            // Update the mouse, it takes the raw mouse data and handles it internally as needed
+            double mouseX;
+            double mouseY;
+            glfwGetCursorPos(window, &mouseX, &mouseY);
+            this->camera.updateMouseInput(dt, mouseX, mouseY);
+        }
+        else 
+        {
+            this->camera.firstMouse = true;
+        }
 
         // Instead of updating after every change it just updates it manually at the end
         this->camera.updateViewMatrix();
@@ -109,6 +110,11 @@ namespace cuvel
     int GraphicFramework::isWindowClosing()
     {
         return glfwWindowShouldClose(window);
+    }
+
+    bool GraphicFramework::isKeyPressed(const int key)
+    {
+        return glfwGetKey(this->window, key) == GLFW_PRESS;
     }
 }
 

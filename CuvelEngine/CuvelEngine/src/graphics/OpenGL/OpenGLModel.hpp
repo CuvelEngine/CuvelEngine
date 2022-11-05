@@ -12,12 +12,14 @@ namespace cuvel
 	class OpenGLModel
 	{
 	public:
-		explicit OpenGLModel(Mesh mesh, uint32_t coreProgram);
+		explicit OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting);
 		~OpenGLModel();
 
 		void loadUniform();
 		void render();
+		void getRenderStats(uint32_t* vertices, uint32_t* indices);
 
+		void translate(glm::vec3 newPos);
 	private:
 		// Buffer and Array IDs from OpenGL
 		uint32_t VAO{};
@@ -26,6 +28,7 @@ namespace cuvel
 
 		// The shader from the framework
 		uint32_t coreProgram;
+		uint8_t hasLighting;
 
 		// The mesh with the buffer data
 		Mesh mesh;

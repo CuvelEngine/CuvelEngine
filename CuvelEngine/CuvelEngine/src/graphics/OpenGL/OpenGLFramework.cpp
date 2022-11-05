@@ -3,19 +3,85 @@
 #include <exception>
 #include <iostream>
 
+#include "imgui/backends/imgui_impl_glfw.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
+
 // You can ignore this, it's a simple callback function for error control
-void GLAPIENTRY
-MessageCallback(GLenum source,
-	GLenum type,
-	GLuint id,
-	GLenum severity,
-	GLsizei length,
-	const GLchar* message,
-	const void* userParam)
+void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-		type, severity, message);
+	std::cout << "---------------------opengl-callback-start------------" << std::endl;
+	std::cout << "message: " << message << std::endl;
+	std::cout << "source: ";
+	switch (source)
+	{
+	case GL_DEBUG_SOURCE_API:
+		std::cout << "API";
+		break;
+	case GL_DEBUG_SOURCE_APPLICATION:
+		std::cout << "APPLICATION";
+		break;
+	case GL_DEBUG_SOURCE_OTHER:
+		std::cout << "OTHER";
+		break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:
+		std::cout << "SHADER COMPILER";
+		break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:
+		std::cout << "THIRD PARTY";
+		break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+		std::cout << "WINDOW SYSTEM";
+		break;
+	}
+	std::cout << std::endl;
+
+	std::cout << "type: ";
+	switch (type) {
+	case GL_DEBUG_TYPE_ERROR:
+		std::cout << "ERROR";
+		break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+		std::cout << "DEPRECATED_BEHAVIOR";
+		break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+		std::cout << "UNDEFINED_BEHAVIOR";
+		break;
+	case GL_DEBUG_TYPE_PORTABILITY:
+		std::cout << "PORTABILITY";
+		break;
+	case GL_DEBUG_TYPE_PERFORMANCE:
+		std::cout << "PERFORMANCE";
+		break;
+	case GL_DEBUG_TYPE_OTHER:
+		std::cout << "OTHER";
+		break;
+	}
+	std::cout << std::endl;
+
+	std::cout << "id: " << id << std::endl;
+	std::cout << "severity: ";
+	switch (severity) {
+	case GL_DEBUG_SEVERITY_LOW:
+		std::cout << "LOW";
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		std::cout << "MEDIUM";
+		break;
+	case GL_DEBUG_SEVERITY_HIGH:
+		std::cout << "HIGH";
+		break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		std::cout << "NOTIFICATION";
+		break;
+	default:
+		std::cout << "UNKNOWN (" << severity <<")";
+	}
+	std::cout << std::endl;
+	std::cout << "---------------------opengl-callback-end--------------" << std::endl;
+	if (GLSTOPERROR && type == GL_DEBUG_TYPE_ERROR)
+	{
+		__debugbreak();
+	}
 }
 
 // You can also ignore this, it's just a callback for when the window is resized
@@ -41,7 +107,7 @@ namespace cuvel
 		glfwWindowHint(GLFW_RESIZABLE, RESIZABLE);
 		// Im not sure what this one does either
 		glfwWindowHint(GLFW_SAMPLES, GLSAMPLES);
-		
+
 
 		if (!this->createWindow())
 		{
@@ -61,9 +127,11 @@ namespace cuvel
 
 		// This is so OpenGL tells us when things go wrong
 		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(MessageCallback, 0);
-
-		// No idea what this does, the depth test thing has to do with depth I think
+		glDebugMessageCallback(openglCallbackFunction, 0);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		// Disable the notification severity level, we only care about warnings and errors
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+		
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 
@@ -81,12 +149,10 @@ namespace cuvel
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// If you change GL_FILL with GL_LINE OpenGL doesn't paint the area inside the triangle
-		// It looks very cool, and I guess you can also see the geometry for
-		// possible bugs or something, whatever
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// This is what traps the mouse in the window and hides it.
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		this->setLockCursor();
 
 		this->shader = new Shader(VERTEX_LOCATION, FRAGMENT_LOCATION, GEOMETRY_LOCATION);
 		glUseProgram(this->shader->id);
@@ -97,50 +163,95 @@ namespace cuvel
 
 	OpenGLFramework::~OpenGLFramework()
 	{
-		// DELETE THIS
 		delete this->shader;
 	}
 
 
 	void OpenGLFramework::update(const float_t& dt)
 	{
+		this->models.at(1)->translate(glm::normalize(this->lightDir) * 10.0f);
+
 		// Update the view matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ViewMatrix"), 1, false, glm::value_ptr(this->camera.viewMatrix));
 
 		// Update the projection matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ProjectionMatrix"), 1, false, glm::value_ptr(this->projMatrix));
+
+		// Update the projection matrix uniform
+		glUniform3fv(glGetUniformLocation(this->shader->id, "lightDir"), 1, glm::value_ptr(this->lightDir));
+
 	}
 
 	// For now nothing weird has to be done processing inputs so it just calls the parent function
-	void OpenGLFramework::event(const float_t& dt)
+	void OpenGLFramework::event(KeyMapper* keyMapper, const float_t& dt)
 	{
-		this->GraphicFramework::event(dt);
+		this->GraphicFramework::event(keyMapper, dt);
 	}
 
 	void OpenGLFramework::render()
 	{
 		// Paints the whole frame black again. If you remove this that trippy thing
 		// that some games have when you go out of bounds happen, like you start
-		// seeing you afterimage. Normally you repaint everything so games don't do it
-		// When you go out of bounds they don't have stuff to paint and thus earlier
-		// frames are still there
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// seeing you after image. Normally you paint everything with skyboxes and models
+		// so games don't do it. But when you go out of bounds they don't have stuff to paint
+		// and thus earlier frames are still there
+		glClearColor(CLEARCOLOR, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		this->drawCalls = 0;
+		this->vertices = 0;
+		this->indices = 0;
 
 		// for every model, render it.
 		for (const std::pair<uint32_t, OpenGLModel*> model : this->models)
 		{
 			model.second->render();
+			// This is done to gather some stats about the object for the ImGui debug
+			model.second->getRenderStats(&this->vertices, &this->indices);
+			this->drawCalls++;
 		}
+
+		//TODO: Isolate this so ImGui is in its own area
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
 		glFlush();
 	}
 
-	void OpenGLFramework::addModel(uint32_t id, const Mesh mesh)
+	void OpenGLFramework::addModel(uint32_t id, const Mesh mesh, const bool hasLighting)
 	{
 		// self explanatory
-		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id));
+		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id, hasLighting));
+	}
+
+	void OpenGLFramework::setupImgui()
+	{
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+		const std::string glsl_version = "#version " + std::to_string(GLMAYOR) + std::to_string(GLMINOR) + "0";
+		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+	}
+
+	void OpenGLFramework::newFrameImgui()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void OpenGLFramework::destroyImgui()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+	}
+
+	void OpenGLFramework::imguiWindow()
+	{
+		ImGui::Text("Frametime: %.3fms (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("Draw calls: %d", this->drawCalls);
+		ImGui::Text("Vertices: %d", this->vertices);
+		ImGui::Text("Indices: %d", this->indices);
+		ImGui::Separator();
+		ImGui::SliderFloat3("Light direction", glm::value_ptr(this->lightDir), -1, 1);
 	}
 
 	OpenGLFramework::Shader::Shader(const std::string& vertex, const std::string& fragment, const std::string& geometry)

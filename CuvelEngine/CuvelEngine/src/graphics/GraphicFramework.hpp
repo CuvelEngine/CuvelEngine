@@ -14,10 +14,12 @@ enum GLibrary
 
 namespace cuvel
 {
+	class KeyMapper;
+
 	//Interface for the Graphics framework, will be inherited by each graphics
 	//library implementation.
 	// TODO: see if this is actually a good set of functions for the template
-	class GraphicFramework
+	class GraphicFramework : public ImguiCompatible
 	{
 	public:
 		virtual ~GraphicFramework();
@@ -26,18 +28,33 @@ namespace cuvel
 		virtual void update(const float_t& dt) = 0;
 
 		// process inputs between frames
-		virtual void event(const float_t& dt);
+		virtual void event(KeyMapper* keyMapper, const float_t& dt);
 
 		// render new frame
 		virtual void render() = 0;
 
 		// add a model to the rendering model buffer
 		// Each model must have an ID associated, management left to the implementation
-		virtual void addModel(uint32_t id, Mesh mesh) = 0;
+		virtual void addModel(uint32_t id, Mesh mesh, bool hasLighting) = 0;
+
+		// Imgui handling
+		virtual void setupImgui() = 0;
+		virtual void newFrameImgui() = 0;
+		virtual void destroyImgui() = 0;
+
+		void imguiWindow() override = 0;
+
+		// ------------------------------------------------------------------------
+		// ----------------------- End of virtual functions -----------------------
+		// ------------------------------------------------------------------------
 
 		// Check if the window is closed
 		int isWindowClosing();
+		bool isKeyPressed(int key);
+		void setLockCursor();
 
+		// Camera class that will beautifully handle the viewMatrix
+		Camera camera;
 	protected:
 		static bool initglfw();
 		bool createWindow();
@@ -50,12 +67,12 @@ namespace cuvel
 		int32_t fbwidth = 0;
 		int32_t fbheight = 0;
 
-		GLFWwindow* window = nullptr;
-
-		// Camera class that will beautifully handle the viewMatrix
-		Camera camera{};
-
 		// Matrix that is going to be sent to the shaders so the 3D space actually makes sense
 		glm::mat4 projMatrix{1.f};
+
+		// Light source
+		glm::vec3 lightDir{1.0f};
+
+		GLFWwindow* window = nullptr;
 	};
 }

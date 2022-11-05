@@ -13,14 +13,20 @@ namespace cuvel
 	class OpenGLFramework final : public GraphicFramework
 	{
 	public:
-		OpenGLFramework();
+		explicit OpenGLFramework();
 		~OpenGLFramework() override;
 
 		void update(const float_t& dt) override;
-		void event(const float_t& dt) override;
+		void event(KeyMapper* keyMapper, const float_t& dt) override;
 		void render() override;
 
-		void addModel(uint32_t id, Mesh mesh) override;
+		void addModel(uint32_t id, Mesh mesh, bool hasLighting) override;
+
+		void setupImgui() override;
+		void newFrameImgui() override;
+		void destroyImgui() override;
+
+		void imguiWindow() override;
 
 	private:
 		// This class manages OpenGL's shaders. Im not sure if this will stay
@@ -45,6 +51,11 @@ namespace cuvel
 
 		Shader* shader = nullptr;
 		std::unordered_map<uint32_t, OpenGLModel*> models;
+
+		//Imgui parameters
+		uint32_t vertices = 0;
+		uint32_t indices = 0;
+		uint16_t drawCalls = 0;
 	};
 }
 
