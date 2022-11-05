@@ -58,7 +58,7 @@ namespace cuvel
 		{
 			for (auto& [pos, color, normal] : this->vertices)
 			{
-				glm::max(this->size, pos);
+				this->size = glm::max(this->size, pos);
 			}
 		}
 
