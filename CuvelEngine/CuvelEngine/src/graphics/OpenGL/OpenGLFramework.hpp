@@ -16,11 +16,11 @@ namespace cuvel
 		explicit OpenGLFramework();
 		~OpenGLFramework() override;
 
-		void update(const float_t& dt) override;
-		void event(KeyMapper* keyMapper, const float_t& dt) override;
+		void update(float_t& dt) override;
+		void event(KeyMapper* keyMapper, float_t& dt) override;
 		void render() override;
 
-		void addModel(uint32_t id, Mesh mesh, bool hasLighting) override;
+		void addModel(uint32_t id, Mesh mesh, bool hasLighting, glm::vec3 pos) override;
 
 		void setupImgui() override;
 		void newFrameImgui() override;

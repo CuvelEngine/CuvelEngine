@@ -7,7 +7,7 @@
 #include "movement/KeyMapper.hpp"
 #include <iostream>
 
-Engine::Engine(const GLibrary lib): dt(0), curTime(0), lastTime(0)
+Engine::Engine(GLibrary lib): dt(0), curTime(0), lastTime(0)
 {
 	// Imgui must be initialized before anything else
 	this->imguiManager = new cuvel::ImguiManager();
@@ -35,8 +35,18 @@ Engine::Engine(const GLibrary lib): dt(0), curTime(0), lastTime(0)
 	this->gFramework->setupImgui();
 
 	// Making a cube for testing
-	this->gFramework->addModel(0, makeCube(), true);
-	this->gFramework->addModel(1, makeCube(), false);
+	uint32_t count = 0;
+	for (uint8_t x = 0; x < 18; x += 3)
+	{
+		for (uint8_t y = 0; y < 18; y += 3)
+		{
+			for (uint8_t z = 0; z < 18; z += 3)
+			{
+				this->gFramework->addModel(count, makeCube(), true, glm::vec3(x, y, z));
+				count++;
+			}
+		}
+	}
 }
 
 Engine::~Engine()
@@ -59,8 +69,8 @@ void Engine::run()
 
 		// Update imgui
 		this->gFramework->newFrameImgui();
+		
 		this->imguiManager->renderImgui();
-
 		// Render data in GPU
 		this->gFramework->render();
 	}

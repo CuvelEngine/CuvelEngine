@@ -3,7 +3,7 @@
 #include "graphics/GraphicFramework.hpp"
 
 // Basic mapping that translates from text to enum. Very simple
-static std::unordered_map<std::string, cuvel::Directions> const dirTable = {
+static std::unordered_map<std::string, cuvel::Directions> dirTable = {
 	{"backward", cuvel::Directions::backward},
 	{"forward", cuvel::Directions::forward},
 	{"right", cuvel::Directions::right},
@@ -17,18 +17,18 @@ namespace cuvel
 	KeyMapper::KeyMapper(GraphicFramework* gFram)
 	: gFram(gFram){}
 
-	void KeyMapper::addKeyMap(int key, const KeyMapAction action, const bool canBeHeld, std::string param1, std::string param2)
+	void KeyMapper::addKeyMap(int key, KeyMapAction action, bool canBeHeld, std::string param1, std::string param2)
 	{
 		if (this->keyMaps.contains(key))
 		{
-			const std::string excepStr = "Duplicated entry for key " + key;
+			std::string excepStr = "Duplicated entry for key " + key;
 			throw std::exception(excepStr.c_str());
 		}
 		KeyMap keyMap = { action, std::move(param1), std::move(param2), canBeHeld, false };
 		this->keyMaps.emplace(key, keyMap);
 	}
 
-	void KeyMapper::executeKeyMaps(const float dt)
+	void KeyMapper::executeKeyMaps(float dt)
 	{
 		// Simply go through each relevant key and edit the camera if it is triggered
 		for (auto& [key, map]: KeyMapper::keyMaps)
@@ -51,14 +51,14 @@ namespace cuvel
 	}
 
 	// Moves the camera in a specific direction
-	void KeyMapper::move(const std::string& param1, const std::string& param2, const float dt)
+	void KeyMapper::move(std::string& param1, std::string& param2, float dt)
 	{
 		this->gFram->camera.updateKeyboardInput(dt, dirTable.at(param1));
 	}
 
 	// Locks or unlocks the cursor so it can either be catched by the game or moved
 	// around the computer
-	void KeyMapper::lockCursor(const std::string& param1, const std::string& param2, const float dt)
+	void KeyMapper::lockCursor(std::string& param1, std::string& param2, float dt)
 	{
 		this->gFram->setLockCursor();
 	}

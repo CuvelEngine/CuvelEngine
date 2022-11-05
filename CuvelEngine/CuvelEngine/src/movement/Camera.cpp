@@ -1,10 +1,12 @@
 #include "Camera.hpp"
 
+#include <iostream>
+
 namespace cuvel
 {
 	// change position and the direction where character is looking
 	// Maybe we should separate those two so you can just edit one of them?
-	void Camera::teleport(const glm::vec3 pos, const glm::vec3 front)
+	void Camera::teleport(glm::vec3 pos, glm::vec3 front)
 	{
 		this->pos = pos;
 		this->front = front;
@@ -16,9 +18,18 @@ namespace cuvel
 		this->viewMatrix = glm::lookAt(this->pos, this->pos + this->front, this->worldUp);
 	}
 
+	void Camera::setFrustumInternals(float aspectRatio)
+	{
+		// store the information
+		this->aspectRatio = aspectRatio;
+
+		// compute width and height of the near section
+		this->tang = static_cast<float>(tan(glm::radians(FOVy * 0.5)));
+	}
+
 	// Pretty self explanatory
 	// Front and right are calculated taking into account the camera rotation
-	void Camera::updateKeyboardInput(const float_t& dt, const Directions dir)
+	void Camera::updateKeyboardInput(float_t& dt, Directions dir)
 	{
 		switch (dir)
 		{
@@ -48,7 +59,7 @@ namespace cuvel
 	// This one is a bit complicated, but it's basically all trigonometry.
 	// Look up how pitch, yaw and roll works to understand it
 	//TODO: Prepare for Vulkan (Vulkan uses inverted y axis)
-	void Camera::updateMouseInput(const float_t& dt, const double& mouseX, const double& mouseY)
+	void Camera::updateMouseInput(float_t& dt, double& mouseX, double& mouseY)
 	{
 		// If it's the first time it's working we assume there is no movement
 		// Otherwise when we open the program the camera will do a weird snap
@@ -89,6 +100,34 @@ namespace cuvel
 		front = glm::normalize(front);
 		right = glm::normalize(glm::cross(front, worldUp));
 		up = glm::normalize(glm::cross(right, front));
+	}
+
+	int Camera::pointInFrustum(glm::vec3& point)
+	{
+		// compute vector from camera position to p
+		glm::vec3 v = point - this->pos;
+
+		// compute and test the Z coordinate
+		float pcz = glm::dot(v, this->front);
+		if (pcz > this->farPlane || pcz < this->nearPlane)
+		{
+			return(OUTSIDE);
+		}
+		// compute and test the Y coordinate
+		float pcy = glm::dot(v, this->up);
+		float aux = pcz * this->tang;
+		if (pcy > aux || pcy < -aux)
+		{
+			return(OUTSIDE);
+		}
+		// compute and test the X coordinate
+		float pcx = glm::dot(v, this->right);
+		aux = aux * this->aspectRatio;
+		if (pcx > aux || pcx < -aux)
+		{
+			return(OUTSIDE);
+		}
+		return(INSIDE);
 	}
 
 	void Camera::imguiWindow()
