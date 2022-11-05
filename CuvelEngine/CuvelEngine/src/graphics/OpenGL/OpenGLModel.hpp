@@ -1,8 +1,6 @@
 #pragma once
 #include "graphics/Mesh.hpp"
-
-#include <vector>
-
+#include "movement/Camera.hpp"
 
 namespace cuvel
 {
@@ -15,12 +13,14 @@ namespace cuvel
 		explicit OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting);
 		~OpenGLModel();
 
-		void loadUniform();
 		void render();
 		void getRenderStats(uint32_t* vertices, uint32_t* indices);
 
 		void translate(glm::vec3 newPos);
+
+		bool isInsideClippingPlane(Camera* cam);
 	private:
+		void loadUniform();
 		// Buffer and Array IDs from OpenGL
 		uint32_t VAO{};
 		uint32_t VBO{};

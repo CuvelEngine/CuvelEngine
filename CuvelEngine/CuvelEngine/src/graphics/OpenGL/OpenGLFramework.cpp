@@ -2,6 +2,7 @@
 
 #include <exception>
 #include <iostream>
+#include <cmath>
 
 #include "imgui/backends/imgui_impl_glfw.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
@@ -84,10 +85,13 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 	}
 }
 
+float aspectRatio;
+
 // You can also ignore this, it's just a callback for when the window is resized
 void resizeWindow(GLFWwindow* window, int fbw, int fbh)
 {
 	glViewport(0, 0, fbw, fbh);
+	aspectRatio = static_cast<float>(fbw) / fbh;
 }
 
 namespace cuvel
@@ -116,6 +120,9 @@ namespace cuvel
 
 		glfwGetFramebufferSize(window, &fbwidth, &fbheight);
 		glfwSetFramebufferSizeCallback(window, resizeWindow);
+		aspectRatio = static_cast<float>(fbwidth) / fbheight;
+		this->camera.setFrustumInternals(aspectRatio);
+
 		//glViewport(0, 0, frameBufferW, frameBufferH);
 
 		// Experimental let's gooooooooooooooo
@@ -127,10 +134,10 @@ namespace cuvel
 
 		// This is so OpenGL tells us when things go wrong
 		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(openglCallbackFunction, 0);
+		glDebugMessageCallback(openglCallbackFunction, nullptr);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		// Disable the notification severity level, we only care about warnings and errors
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 		
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
@@ -167,9 +174,18 @@ namespace cuvel
 	}
 
 
-	void OpenGLFramework::update(const float_t& dt)
+	void OpenGLFramework::update(float_t& dt)
 	{
-		this->models.at(1)->translate(glm::normalize(this->lightDir) * 10.0f);
+		if (aspectRatio != this->camera.aspectRatio)
+		{
+			this->camera.setFrustumInternals(aspectRatio);
+		}
+		if (Camera::lastFOV != Camera::FOVy)
+		{
+			this->updateProjection();
+			this->camera.setFrustumInternals(aspectRatio);
+			Camera::lastFOV = Camera::FOVy;
+		}
 
 		// Update the view matrix uniform
 		glUniformMatrix4fv(glGetUniformLocation(this->shader->id, "ViewMatrix"), 1, false, glm::value_ptr(this->camera.viewMatrix));
@@ -183,7 +199,7 @@ namespace cuvel
 	}
 
 	// For now nothing weird has to be done processing inputs so it just calls the parent function
-	void OpenGLFramework::event(KeyMapper* keyMapper, const float_t& dt)
+	void OpenGLFramework::event(KeyMapper* keyMapper, float_t& dt)
 	{
 		this->GraphicFramework::event(keyMapper, dt);
 	}
@@ -203,12 +219,16 @@ namespace cuvel
 		this->indices = 0;
 
 		// for every model, render it.
-		for (const std::pair<uint32_t, OpenGLModel*> model : this->models)
+		for (std::pair<uint32_t, OpenGLModel*> model : this->models)
 		{
-			model.second->render();
-			// This is done to gather some stats about the object for the ImGui debug
-			model.second->getRenderStats(&this->vertices, &this->indices);
-			this->drawCalls++;
+			if (model.second->isInsideClippingPlane(&this->camera))
+			{
+				model.second->render();
+				// This is done to gather some stats about the object for the ImGui debug
+				model.second->getRenderStats(&this->vertices, &this->indices);
+				this->drawCalls++;
+			}
+			
 		}
 
 		//TODO: Isolate this so ImGui is in its own area
@@ -218,16 +238,17 @@ namespace cuvel
 		glFlush();
 	}
 
-	void OpenGLFramework::addModel(uint32_t id, const Mesh mesh, const bool hasLighting)
+	void OpenGLFramework::addModel(uint32_t id, Mesh mesh, bool hasLighting, glm::vec3 pos)
 	{
 		// self explanatory
 		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id, hasLighting));
+		this->models.at(id)->translate(pos);
 	}
 
 	void OpenGLFramework::setupImgui()
 	{
         ImGui_ImplGlfw_InitForOpenGL(window, true);
-		const std::string glsl_version = "#version " + std::to_string(GLMAYOR) + std::to_string(GLMINOR) + "0";
+		std::string glsl_version = "#version " + std::to_string(GLMAYOR) + std::to_string(GLMINOR) + "0";
 		ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 	}
 
@@ -247,11 +268,16 @@ namespace cuvel
 	void OpenGLFramework::imguiWindow()
 	{
 		ImGui::Text("Frametime: %.3fms (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Separator();
 		ImGui::Text("Draw calls: %d", this->drawCalls);
 		ImGui::Text("Vertices: %d", this->vertices);
 		ImGui::Text("Indices: %d", this->indices);
 		ImGui::Separator();
 		ImGui::SliderFloat3("Light direction", glm::value_ptr(this->lightDir), -1, 1);
+		ImGui::SliderFloat("FOV", &cuvel::Camera::FOVy, 40, 150, "%.0fº");
+		ImGui::Separator();
+		ImGui::Text("Position: (%.3f, %.3f, %.3f)", this->camera.pos.x, this->camera.pos.y, this->camera.pos.z);
+		ImGui::Text("Looking at: (%.3f, %.3f, %.3f)", this->camera.front.x, this->camera.front.y, this->camera.front.z);
 	}
 
 	OpenGLFramework::Shader::Shader(const std::string& vertex, const std::string& fragment, const std::string& geometry)
@@ -259,9 +285,9 @@ namespace cuvel
 		uint32_t gs = 0;
 
 		// create shaders then link them into a pipeline
-		const uint32_t vs = loadShader(GL_VERTEX_SHADER, vertex);
+		uint32_t vs = loadShader(GL_VERTEX_SHADER, vertex);
 		if (!geometry.empty()) gs = loadShader(GL_GEOMETRY_SHADER, geometry);
-		const uint32_t fs = loadShader(GL_FRAGMENT_SHADER, fragment);
+		uint32_t fs = loadShader(GL_FRAGMENT_SHADER, fragment);
 
 		OpenGLFramework::Shader::linkProgram(vs, gs, fs);
 
@@ -274,12 +300,12 @@ namespace cuvel
 	// Both next functions are just all OpenGL overhead, not really worth explaining
 	// If you REALLY want to know what is going on you can kind of deduce by reading the
 	// function names.
-	uint32_t OpenGLFramework::Shader::loadShader(const GLenum type, const std::string& file)
+	uint32_t OpenGLFramework::Shader::loadShader(GLenum type, const std::string& file)
 	{
 		GLint success;
 
-		const uint32_t shaderID = glCreateShader(type);
-		const std::string src = GraphicFramework::loadShaderSrc(file);
+		uint32_t shaderID = glCreateShader(type);
+		std::string src = GraphicFramework::loadShaderSrc(file);
 		const GLchar* shSrc = src.c_str();
 		glShaderSource(shaderID, 1, &shSrc, nullptr);
 		glCompileShader(shaderID);
@@ -296,7 +322,7 @@ namespace cuvel
 		return shaderID;
 	}
 
-	void OpenGLFramework::Shader::linkProgram(const uint32_t vs, const uint32_t gs, const uint32_t fs)
+	void OpenGLFramework::Shader::linkProgram(uint32_t vs, uint32_t gs, uint32_t fs)
 	{
 		GLint success;
 

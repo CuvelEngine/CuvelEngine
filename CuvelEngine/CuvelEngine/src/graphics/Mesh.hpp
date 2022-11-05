@@ -51,11 +51,41 @@ namespace cuvel
 			this->modelMatrix = glm::translate(glm::mat4(1.f), this->position);
 			// creates a normal matrix with the model matrix
 			this->normalMatrix = glm::transpose(glm::inverse(glm::mat3(this->modelMatrix)));
+			this->updateCorners();
+		}
+
+		void calculateSize()
+		{
+			uint8_t mx = 0;
+			uint8_t my = 0;
+			uint8_t mz = 0;
+			for (auto& [pos, color, normal] : this->vertices)
+			{
+				mx = std::max(pos.x, mx);
+				my = std::max(pos.y, my);
+				mz = std::max(pos.z, mz);
+			}
+			this->size = glm::u8vec3(mx, my, mz);
+		}
+
+		void updateCorners()
+		{
+			if (this->size == glm::u8vec3(0)) this->calculateSize();
+			this->corners[0] = this->position;
+			this->corners[1] = glm::vec3(this->position.x + this->size.x, this->position.y, this->position.z);
+			this->corners[2] = glm::vec3(this->position.x, this->position.y + this->size.y, this->position.z);
+			this->corners[3] = glm::vec3(this->position.x, this->position.y, this->position.z + this->size.z);
+			this->corners[4] = glm::vec3(this->position.x + this->size.x, this->position.y + this->size.y, this->position.z);
+			this->corners[5] = glm::vec3(this->position.x + this->size.x, this->position.y, this->position.z + this->size.z);
+			this->corners[6] = glm::vec3(this->position.x, this->position.y + this->size.y, this->position.z + this->size.z);
+			this->corners[6] = glm::vec3(this->position.x + this->size.x, this->position.y + this->size.y, this->position.z + this->size.z);
 		}
 
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 		glm::vec3 position{};
+		glm::u8vec3 size{};
+		glm::vec3 corners[8] = {};
 
 	private:
 		glm::mat4 modelMatrix{};
