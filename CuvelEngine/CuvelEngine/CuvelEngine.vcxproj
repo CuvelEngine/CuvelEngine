@@ -154,6 +154,7 @@
     <ClCompile Include="src\graphics\OpenGL\OpenGLFramework.cpp" />
     <ClCompile Include="src\graphics\OpenGL\OpenGLModel.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\graphics\Vulkan\VulkanFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\settings\GraphicOptions.hpp" />
     <ClInclude Include="src\graphics\OpenGL\OpenGLFramework.hpp" />
     <ClInclude Include="src\graphics\GraphicFramework.hpp" />
+    <ClInclude Include="src\graphics\Vulkan\VulkanFramework.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\graphics\shaders\fragment.glsl" />

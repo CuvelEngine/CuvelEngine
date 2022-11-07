@@ -7,7 +7,7 @@
 class Engine
 {
 public:
-	explicit Engine(GLibrary lib);
+	explicit Engine();
 	~Engine();
 	void run();
 

@@ -125,13 +125,16 @@ namespace cuvel
 			throw std::exception("Error initiating glew");
 		}
 
-		// This is so OpenGL tells us when things go wrong
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(openglCallbackFunction, nullptr);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		// Disable the notification severity level, we only care about warnings and errors
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
-		
+		if constexpr (GRAPHICSDEBUG)
+		{
+			// This is so OpenGL tells us when things go wrong
+			glEnable(GL_DEBUG_OUTPUT);
+			glDebugMessageCallback(openglCallbackFunction, nullptr);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			// Disable the notification severity level, we only care about warnings and errors
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
+
+		}
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 

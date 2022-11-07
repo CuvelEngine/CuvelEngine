@@ -1,25 +1,20 @@
 #include "Engine.hpp"
 
 #include "graphics/OpenGL/OpenGLFramework.hpp"
+#include "graphics/Vulkan/VulkanFramework.hpp"
 #include "movement/KeyMapper.hpp"
 
-Engine::Engine(GLibrary lib): dt(0), curTime(0), lastTime(0)
+Engine::Engine(): dt(0), curTime(0), lastTime(0)
 {
 	// Imgui must be initialized before anything else
 	this->imguiManager = new cuvel::ImguiManager();
 
 	// This should be able to do hot reload in the future!!
-	switch (lib)
-	{
-	case GLibrary::OpenGL:
-		this->gFramework = new cuvel::OpenGLFramework();
-		break;
-	case GLibrary::Vulkan:
-		//TODO: Implement vulkan
-		throw std::exception("Vulkan is not implemented");
-	default:
-		throw std::exception("Graphics library not recognized");
-	}
+#ifdef USE_OPENGL
+	this->gFramework = new cuvel::OpenGLFramework();
+#elseif USE_VULKAN
+	this->gFramework = new cuvel::VulkanFramework();
+#endif
 
 	// Add context to the KeyMapper so it can interact with the components
 	this->keyMapper = new cuvel::KeyMapper(this->gFramework);

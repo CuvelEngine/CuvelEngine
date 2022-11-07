@@ -4,6 +4,9 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <iomanip>
+#include <numeric>
+#include <string>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>

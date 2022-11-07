@@ -3,7 +3,7 @@
 int main()
 {
     // very complex main function TM
-    Engine engine(GLIB);
+    Engine engine{};
     engine.run();
     return 0;
 }
