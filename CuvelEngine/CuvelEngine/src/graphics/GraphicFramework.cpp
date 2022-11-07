@@ -1,8 +1,4 @@
 #include "GraphicFramework.hpp"
-
-#include <fstream>
-#include <iostream>
-
 #include "movement/KeyMapper.hpp"
 
 namespace cuvel

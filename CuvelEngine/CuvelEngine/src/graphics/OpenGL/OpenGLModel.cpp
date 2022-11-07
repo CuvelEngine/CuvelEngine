@@ -1,7 +1,5 @@
 #include "OpenGLModel.hpp"
 
-#include <glm/gtx/vector_angle.hpp>
-
 namespace cuvel
 {
 	OpenGLModel::OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting)

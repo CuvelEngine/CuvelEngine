@@ -1,6 +1,4 @@
 #pragma once
-#include <unordered_map>
-
 #include "OpenGLModel.hpp"
 #include "graphics/GraphicFramework.hpp"
 

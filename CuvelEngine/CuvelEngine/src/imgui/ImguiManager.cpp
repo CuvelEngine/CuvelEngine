@@ -1,8 +1,5 @@
 #include "ImguiManager.hpp"
 
-#include <utility>
-
-
 namespace cuvel
 {
 	// Must be executed before anything else (I think)

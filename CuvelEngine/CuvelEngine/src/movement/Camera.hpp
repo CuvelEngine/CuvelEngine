@@ -1,5 +1,4 @@
 #pragma once
-#include <glm/gtc/matrix_transform.hpp>
 
 #include "imgui/ImguiManager.hpp"
 #include "settings/GraphicOptions.hpp"

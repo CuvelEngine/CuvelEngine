@@ -3,7 +3,7 @@
 int main()
 {
     // very complex main function TM
-    Engine engine(GLibrary::OpenGL);
+    Engine engine(GLIB);
     engine.run();
     return 0;
 }

@@ -1,7 +1,5 @@
 #include "Camera.hpp"
 
-#include <iostream>
-
 namespace cuvel
 {
 	// change position and the direction where character is looking

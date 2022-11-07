@@ -1,17 +1,15 @@
 #pragma once
 
-#define GLEW_STATIC
 #include <GL/glew.h>
+#include <vulkan/vulkan.hpp>
+
 #include <GLFW/glfw3.h>
 
-#define GLM_ENABLE_EXPERIMENTAL
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtx/hash.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 // --------------------------------------------------------------------------
+
+// Graphics library
+#define GLIB OpenGL
 
 // window
 #define RESIZABLE true

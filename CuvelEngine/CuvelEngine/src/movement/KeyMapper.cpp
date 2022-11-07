@@ -1,5 +1,4 @@
 #include "KeyMapper.hpp"
-
 #include "graphics/GraphicFramework.hpp"
 
 // Basic mapping that translates from text to enum. Very simple

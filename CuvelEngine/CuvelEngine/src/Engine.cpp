@@ -1,11 +1,7 @@
 #include "Engine.hpp"
 
-#include <exception>
-
 #include "graphics/OpenGL/OpenGLFramework.hpp"
-#include "imgui/ImguiManager.hpp"
 #include "movement/KeyMapper.hpp"
-#include <iostream>
 
 Engine::Engine(GLibrary lib): dt(0), curTime(0), lastTime(0)
 {

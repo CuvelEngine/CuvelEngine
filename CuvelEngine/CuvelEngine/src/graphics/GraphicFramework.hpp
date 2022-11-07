@@ -1,7 +1,5 @@
 #pragma once
 #include "settings/GraphicOptions.hpp"
-#include <string>
-
 #include "graphics/Mesh.hpp"
 #include "movement/Camera.hpp"
 

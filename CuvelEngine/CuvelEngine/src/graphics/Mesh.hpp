@@ -1,8 +1,6 @@
 #pragma once
+
 #include "settings/GraphicOptions.hpp"
-
-#include <vector>
-
 namespace cuvel
 {
 	// The basic structure containing the data for each vertex
