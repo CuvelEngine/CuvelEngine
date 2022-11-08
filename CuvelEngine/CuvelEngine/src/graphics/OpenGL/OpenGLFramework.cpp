@@ -217,11 +217,11 @@ namespace cuvel
 		// for every model, render it.
 		for (std::pair<uint32_t, OpenGLModel*> model : this->models)
 		{
-			if (model.second->isInsideClippingPlane(&this->camera))
+			if (model.second->mesh.isInsideClippingPlane(&this->camera))
 			{
 				model.second->render();
 				// This is done to gather some stats about the object for the ImGui debug
-				model.second->getRenderStats(&this->vertices, &this->indices);
+				model.second->mesh.getRenderStats(&this->vertices, &this->indices);
 				this->drawCalls++;
 			}
 			
@@ -238,7 +238,7 @@ namespace cuvel
 	{
 		// self explanatory
 		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id, hasLighting));
-		this->models.at(id)->translate(pos);
+		this->models.at(id)->mesh.translate(pos);
 	}
 
 	void OpenGLFramework::setupImgui()

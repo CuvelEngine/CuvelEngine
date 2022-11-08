@@ -73,30 +73,5 @@ namespace cuvel
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, this->mesh.indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
-
-	void OpenGLModel::getRenderStats(uint32_t* vertices, uint32_t* indices)
-	{
-		*vertices += this->mesh.vertices.size();
-		*indices += this->mesh.indices.size();
-	}
-	void OpenGLModel::translate(glm::vec3 newPos)
-	{
-		if (this->mesh.position == newPos) return;
-		this->mesh.position = newPos;
-		this->mesh.updateMatrices();
-	}
-
-	bool OpenGLModel::isInsideClippingPlane(Camera* cam)
-	{
-		// Every corner has to be outside of the clipping plane for the model to be culled
-		for (glm::vec3& corner : this->mesh.corners)
-		{
-			if (cam->pointInFrustum(corner) != FrustResult::OUTSIDE)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 }
 

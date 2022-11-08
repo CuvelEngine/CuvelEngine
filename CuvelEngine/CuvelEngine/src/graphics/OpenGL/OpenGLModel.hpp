@@ -14,11 +14,9 @@ namespace cuvel
 		~OpenGLModel();
 
 		void render();
-		void getRenderStats(uint32_t* vertices, uint32_t* indices);
 
-		void translate(glm::vec3 newPos);
-
-		bool isInsideClippingPlane(Camera* cam);
+		// The mesh with the buffer data
+		Mesh mesh;
 	private:
 		void loadUniform();
 		// Buffer and Array IDs from OpenGL
@@ -29,8 +27,5 @@ namespace cuvel
 		// The shader from the framework
 		uint32_t coreProgram;
 		uint8_t hasLighting;
-
-		// The mesh with the buffer data
-		Mesh mesh;
 	};
 }

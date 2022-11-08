@@ -1,5 +1,6 @@
 #pragma once
 #include "graphics/GraphicFramework.hpp"
+#include "graphics/vulkan/utils.hpp"
 
 namespace cuvel
 {
@@ -28,6 +29,14 @@ namespace cuvel
 		uint32_t vertices = 0;
 		uint32_t indices = 0;
 		uint16_t drawCalls = 0;
+
+		vk::raii::Context context;
+		vk::raii::Instance instance = nullptr;
+		vk::raii::PhysicalDevice pDevice = nullptr;
+		vk::raii::Device lDevice = nullptr;
+		vk::raii::CommandPool commandPool = nullptr;
+		vk::raii::CommandBuffer commandBuffer = nullptr;
+		vk::raii::SurfaceKHR surface = nullptr;
 	};
 
 

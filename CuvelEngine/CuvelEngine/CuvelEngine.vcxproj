@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\Mesh.cpp" />
     <ClCompile Include="src\movement\KeyMapper.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_opengl3.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="src\graphics\Vulkan\VulkanFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics\Vulkan\utils.hpp" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\movement\KeyMapper.hpp" />
     <ClInclude Include="src\imgui\backends\imgui_impl_glfw.h" />

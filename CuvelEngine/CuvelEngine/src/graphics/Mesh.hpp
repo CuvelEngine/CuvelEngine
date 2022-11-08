@@ -3,6 +3,8 @@
 #include "settings/GraphicOptions.hpp"
 namespace cuvel
 {
+	class Camera;
+
 	// The basic structure containing the data for each vertex
 	struct Vertex
 	{
@@ -15,63 +17,21 @@ namespace cuvel
 	// This structure is the library agnostic skeleton of a model
 	struct Mesh
 	{
-		void addQuad(Vertex v0, Vertex v1, Vertex v2, Vertex v3)
-		{
-			uint32_t index = this->vertices.size();
+		void addQuad(Vertex v0, Vertex v1, Vertex v2, Vertex v3);
 
-			this->vertices.push_back(v0);
-			this->vertices.push_back(v1);
-			this->vertices.push_back(v2);
-			this->vertices.push_back(v3);
-
-			this->indices.push_back(index);
-			this->indices.push_back(index + 1);
-			this->indices.push_back(index + 2);
-			this->indices.push_back(index);
-			this->indices.push_back(index + 2);
-			this->indices.push_back(index + 3);
-		}
-		
 		//TODO: Make sure this doesn't flip in Vulkan (Vulkan has inverted y axis)
-		glm::mat4 getModelMatrix()
-		{
-			return this->modelMatrix;
-		}
+		glm::mat4 getModelMatrix();
+		glm::mat3 getNormalMatrix();
 
-		glm::mat3 getNormalMatrix()
-		{
-			return this->normalMatrix;
-		}
+		void updateMatrices();
 
-		void updateMatrices()
-		{
-			// creates a model matrix with the model position, simple as it looks
-			this->modelMatrix = glm::translate(glm::mat4(1.f), this->position);
-			// creates a normal matrix with the model matrix
-			this->normalMatrix = glm::transpose(glm::inverse(glm::mat3(this->modelMatrix)));
-			this->updateCorners();
-		}
+		void calculateSize();
+		void updateCorners();
 
-		void calculateSize()
-		{
-			for (auto& [pos, color, normal] : this->vertices)
-			{
-				this->size = glm::max(this->size, pos);
-			}
-		}
+		void getRenderStats(uint32_t* vertices, uint32_t* indices);
+		void translate(glm::vec3 newPos);
 
-		void updateCorners()
-		{
-			if (this->size == glm::u8vec3(0)) this->calculateSize();
-			this->corners[0] = this->position;
-			this->corners[1] = glm::vec3(this->position.x + this->size.x, this->position.y, this->position.z);
-			this->corners[2] = glm::vec3(this->position.x, this->position.y + this->size.y, this->position.z);
-			this->corners[3] = glm::vec3(this->position.x, this->position.y, this->position.z + this->size.z);
-			this->corners[4] = glm::vec3(this->position.x + this->size.x, this->position.y + this->size.y, this->position.z);
-			this->corners[5] = glm::vec3(this->position.x + this->size.x, this->position.y, this->position.z + this->size.z);
-			this->corners[6] = glm::vec3(this->position.x, this->position.y + this->size.y, this->position.z + this->size.z);
-			this->corners[6] = glm::vec3(this->position.x + this->size.x, this->position.y + this->size.y, this->position.z + this->size.z);
-		}
+		bool isInsideClippingPlane(Camera* cam);
 
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;

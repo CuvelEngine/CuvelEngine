@@ -80,6 +80,7 @@ namespace cuvel
     // Destroy the window. This is called when children are destroyed too so it's perfect
     GraphicFramework::~GraphicFramework()
     {
+        glfwDestroyWindow(window);
         glfwTerminate();
     }
 
