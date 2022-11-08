@@ -1,5 +1,10 @@
 #include "GraphicFramework.hpp"
 
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <glm/ext/matrix_clip_space.hpp>
+
 #include "movement/KeyMapper.hpp"
 
 namespace cuvel

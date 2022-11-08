@@ -1,4 +1,10 @@
 #pragma once
+#include <cassert>
+#include <cstdint>
+#include <stdexcept>
+#include <vector>
+
+#include <vulkan/vulkan_raii.hpp>
 
 template <typename TargetType, typename SourceType>
 TargetType checked_cast(SourceType value)

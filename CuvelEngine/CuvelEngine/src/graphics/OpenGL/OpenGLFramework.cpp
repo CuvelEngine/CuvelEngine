@@ -1,5 +1,12 @@
 #include "OpenGLFramework.hpp"
 
+#include <iostream>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+
+
 // You can ignore this, it's a simple callback function for error control
 void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {

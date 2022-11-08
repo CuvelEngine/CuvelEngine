@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include "graphics/GraphicFramework.hpp"
 
 namespace cuvel

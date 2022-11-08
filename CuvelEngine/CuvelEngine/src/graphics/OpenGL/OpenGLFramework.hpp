@@ -2,6 +2,8 @@
 #include "OpenGLModel.hpp"
 #include "graphics/GraphicFramework.hpp"
 
+#include <unordered_map>
+
 namespace cuvel
 {
 	// Class implementation for OpenGL, pretty full of OpenGL boilerplate

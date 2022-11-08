@@ -1,11 +1,16 @@
 #include "OpenGLModel.hpp"
+#include "settings/GLFWIncludes.hpp"
+#include "settings/GraphicOptions.hpp"
+
+#include <glm/gtc/type_ptr.hpp>
+
 
 namespace cuvel
 {
 	OpenGLModel::OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting)
 	{
 		// Simply move the given mesh into the model
-		this->mesh = std::move(mesh);
+		this->mesh = mesh;
 		this->coreProgram = coreProgram;
 		this->hasLighting = hasLighting ? 1 : 0;
 

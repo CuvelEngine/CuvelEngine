@@ -1,5 +1,7 @@
 #include "Camera.hpp"
 
+#include <glm/ext/matrix_transform.hpp>
+
 namespace cuvel
 {
 	// change position and the direction where character is looking

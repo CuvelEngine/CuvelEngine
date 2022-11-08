@@ -1,9 +1,6 @@
 #pragma once
 
-// --------------------------------------------------------------------------
-//#define USE_OPENGL
-#define USE_OPENGL
-// --------------------------------------------------------------------------
+#include <glm/glm.hpp>
 
 // General options
 #define GRAPHICSDEBUG true

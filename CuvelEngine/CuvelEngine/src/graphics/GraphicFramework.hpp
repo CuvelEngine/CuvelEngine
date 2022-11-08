@@ -1,4 +1,6 @@
 #pragma once
+#include "settings/GLFWIncludes.hpp"
+
 #include "graphics/Mesh.hpp"
 #include "movement/Camera.hpp"
 

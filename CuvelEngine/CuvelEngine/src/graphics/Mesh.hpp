@@ -1,4 +1,7 @@
 #pragma once
+#include <vector>
+
+#include <glm/gtx/hash.hpp>
 
 namespace cuvel
 {

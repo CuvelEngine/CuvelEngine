@@ -107,9 +107,9 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\imgui\include;$(SolutionDir)dependencies\vulkan\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,9 +129,9 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\imgui\include;$(SolutionDir)dependencies\vulkan\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <SupportJustMyCode>true</SupportJustMyCode>
     </ClCompile>
     <Link>
@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\Vulkan\utils.hpp" />
-    <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\movement\KeyMapper.hpp" />
     <ClInclude Include="src\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="src\imgui\backends\imgui_impl_opengl3.h" />
@@ -168,6 +167,7 @@
     <ClInclude Include="src\graphics\OpenGL\OpenGLModel.hpp" />
     <ClInclude Include="src\graphics\Mesh.hpp" />
     <ClInclude Include="src\Engine.hpp" />
+    <ClInclude Include="src\settings\GLFWIncludes.hpp" />
     <ClInclude Include="src\settings\GraphicOptions.hpp" />
     <ClInclude Include="src\graphics\OpenGL\OpenGLFramework.hpp" />
     <ClInclude Include="src\graphics\GraphicFramework.hpp" />

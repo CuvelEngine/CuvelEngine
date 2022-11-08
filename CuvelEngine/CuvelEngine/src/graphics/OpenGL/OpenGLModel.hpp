@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdint>
+
 #include "graphics/Mesh.hpp"
 
 namespace cuvel
