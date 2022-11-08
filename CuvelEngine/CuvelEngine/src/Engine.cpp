@@ -12,7 +12,8 @@ Engine::Engine(): dt(0), curTime(0), lastTime(0)
 	// This should be able to do hot reload in the future!!
 #ifdef USE_OPENGL
 	this->gFramework = new cuvel::OpenGLFramework();
-#elseif USE_VULKAN
+#endif
+#ifdef USE_VULKAN
 	this->gFramework = new cuvel::VulkanFramework();
 #endif
 

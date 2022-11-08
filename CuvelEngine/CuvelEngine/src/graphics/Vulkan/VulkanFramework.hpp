@@ -1,6 +1,5 @@
 #pragma once
 #include "graphics/GraphicFramework.hpp"
-#include "graphics/vulkan/utils.hpp"
 
 namespace cuvel
 {

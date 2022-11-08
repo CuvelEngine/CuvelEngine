@@ -1,6 +1,5 @@
 #pragma once
 #include "graphics/Mesh.hpp"
-#include "movement/Camera.hpp"
 
 namespace cuvel
 {

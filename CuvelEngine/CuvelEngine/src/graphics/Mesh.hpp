@@ -1,6 +1,5 @@
 #pragma once
 
-#include "settings/GraphicOptions.hpp"
 namespace cuvel
 {
 	class Camera;

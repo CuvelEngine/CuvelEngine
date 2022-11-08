@@ -1,5 +1,4 @@
 #pragma once
-#include "settings/GraphicOptions.hpp"
 
 template <typename TargetType, typename SourceType>
 TargetType checked_cast(SourceType value)

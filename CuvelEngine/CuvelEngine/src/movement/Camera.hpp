@@ -1,7 +1,5 @@
 #pragma once
-
 #include "imgui/ImguiManager.hpp"
-#include "settings/GraphicOptions.hpp"
 
 namespace cuvel
 {

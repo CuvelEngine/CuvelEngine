@@ -1,5 +1,4 @@
 #pragma once
-#include "settings/GraphicOptions.hpp"
 #include "graphics/Mesh.hpp"
 #include "movement/Camera.hpp"
 
