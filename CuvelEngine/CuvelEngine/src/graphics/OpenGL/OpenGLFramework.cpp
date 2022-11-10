@@ -118,6 +118,14 @@ namespace cuvel
 			throw std::exception("Error creating a window with GLFW");
 		}
 
+		if constexpr (!GLVSYNC)
+		{
+			//This line of code disables VSync
+			glfwSwapInterval(0);
+		}
+
+		glfwMakeContextCurrent(window);
+
 		glfwGetFramebufferSize(window, &fbwidth, &fbheight);
 		glfwSetFramebufferSizeCallback(window, resizeWindow);
 		aspectRatio = static_cast<float>(fbwidth) / fbheight;

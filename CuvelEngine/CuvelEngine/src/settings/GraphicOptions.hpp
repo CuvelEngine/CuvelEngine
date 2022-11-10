@@ -20,6 +20,11 @@
 // OPENGL
 #define GLSTOPERROR true
 
+#define GLVSYNC true
+
 #define GLMAYOR 4
 #define GLMINOR 5
 #define GLSAMPLES 16
+
+// VULKAN
+#define VKVSYNCMODE tripleBuffer //direct, vSync, relaxedVSync, tripleBuffer

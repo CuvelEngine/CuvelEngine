@@ -26,10 +26,6 @@ namespace cuvel
             return false;
         }
 
-        glfwMakeContextCurrent(window);
-
-        //This line of code disables VSync
-        //glfwSwapInterval(0);
         return true;
     }
 

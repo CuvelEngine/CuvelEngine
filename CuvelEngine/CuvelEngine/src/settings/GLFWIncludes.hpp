@@ -1,12 +1,11 @@
 #pragma once
 
 // --------------------------------------------------------------------------
-//#define USE_OPENGL
-#define USE_OPENGL
+//USE_VULKAN, USE_OPENGL
+#define USE_VULKAN
 // --------------------------------------------------------------------------
 
 #include <GL/glew.h>
-#include <vulkan/vulkan_raii.hpp>
 
 #ifdef USE_VULKAN
 #define GLFW_INCLUDE_NONE

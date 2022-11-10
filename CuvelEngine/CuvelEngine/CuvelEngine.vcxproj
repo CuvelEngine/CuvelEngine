@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_RADIANS;GLM_FORCE_DEPTH_ZERO_TO_ONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\imgui\include;$(SolutionDir)dependencies\vulkan\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\vulkan\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -114,8 +114,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\imgui\x64\Release;$(SolutionDir)dependencies\glfw-3.3.8\lib-vc2022;$(SolutionDir)dependencies\glew-2.1.0\lib\release\x64;$(SolutionDir)dependencies\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;ImGui.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\glfw-3.3.8\lib-vc2022;$(SolutionDir)dependencies\glew-2.1.0\lib\release\x64;$(SolutionDir)dependencies\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -127,7 +127,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_RADIANS;GLM_FORCE_DEPTH_ZERO_TO_ONE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\imgui\include;$(SolutionDir)dependencies\vulkan\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8\include;$(ProjectDir)src;$(SolutionDir)dependencies\glew-2.1.0\include;$(SolutionDir)dependencies\vulkan\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -139,12 +139,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\imgui\x64\Release;$(SolutionDir)dependencies\glfw-3.3.8\lib-vc2022;$(SolutionDir)dependencies\glew-2.1.0\lib\release\x64;$(SolutionDir)dependencies\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;ImGui.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\glfw-3.3.8\lib-vc2022;$(SolutionDir)dependencies\glew-2.1.0\lib\release\x64;$(SolutionDir)dependencies\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\graphics\Mesh.cpp" />
+    <ClCompile Include="src\imgui\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="src\imgui\sources\imgui.cpp" />
+    <ClCompile Include="src\imgui\sources\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui\sources\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui\sources\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui\sources\imgui_widgets.cpp" />
     <ClCompile Include="src\movement\KeyMapper.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\imgui\backends\imgui_impl_opengl3.cpp" />
@@ -158,7 +164,14 @@
     <ClCompile Include="src\graphics\Vulkan\VulkanFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\graphics\Vulkan\utils.hpp" />
+    <ClInclude Include="src\imgui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\imgui\backends\imgui_impl_vulkan.h" />
+    <ClInclude Include="src\imgui\sources\imconfig.h" />
+    <ClInclude Include="src\imgui\sources\imgui.h" />
+    <ClInclude Include="src\imgui\sources\imgui_internal.h" />
+    <ClInclude Include="src\imgui\sources\imstb_rectpack.h" />
+    <ClInclude Include="src\imgui\sources\imstb_textedit.h" />
+    <ClInclude Include="src\imgui\sources\imstb_truetype.h" />
     <ClInclude Include="src\movement\KeyMapper.hpp" />
     <ClInclude Include="src\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="src\imgui\backends\imgui_impl_opengl3.h" />

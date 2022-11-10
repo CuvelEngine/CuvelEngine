@@ -1,7 +1,10 @@
 #include "Engine.hpp"
 
+#ifdef USE_OPENGL
 #include "graphics/OpenGL/OpenGLFramework.hpp"
+#else
 #include "graphics/Vulkan/VulkanFramework.hpp"
+#endif
 #include "movement/KeyMapper.hpp"
 
 Engine::Engine(): dt(0), curTime(0), lastTime(0)
