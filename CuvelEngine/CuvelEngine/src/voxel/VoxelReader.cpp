@@ -1,24 +1,35 @@
 #include "VoxelReader.hpp"
+
+#include "Voxel.hpp"
+#include <glm/gtx/hash.hpp>
+
 #include <iostream>
 #include <fstream>
 
 
 namespace cuvel 
 {
-	std::vector<Voxel> readVoxmFile(std::string filePath)
+	void readVoxmFile(
+		std::string& filePath, 
+		std::unordered_map<glm::u8vec3, Voxel>* voxels, 
+		glm::u8vec3* size, 
+		uint32_t* vertices, uint32_t* indices)
 	{
-		std::vector<Voxel> voxels;
-
 		std::ifstream input(filePath, std::ifstream::binary);
 		if (!input) 
 		{
-			std::cout << "Couldn't read file" << std::endl;
-			return voxels;
+			std::cout << "Couldn't read file " << filePath << std::endl;
+			return;
 		}
 
 		// Read model size
 		glm::uint8 model_size[3];
 		input.read(reinterpret_cast<char*>(model_size), 3);
+
+		std::cout << "Size: (" << 
+			static_cast<int>(model_size[0]) << ", " << 
+			static_cast<int>(model_size[1]) << ", " <<
+			static_cast<int>(model_size[2]) << ")"  << std::endl;
 
 		// Read vertex and index count
 		glm::uint32 vertex_count, index_count;
@@ -32,7 +43,6 @@ namespace cuvel
 
 		while (true)
 		{
-			// Read A (or 0x0 if air voxel)
 			input.read(reinterpret_cast<char*>(&a), 1);
 			if (input.eof()) break;
 
@@ -46,8 +56,13 @@ namespace cuvel
 			// Read RGB values
 			input.read(reinterpret_cast<char*>(&rgb), 3);
 
+			std::cout << "Looked up: (" <<
+				static_cast<int>(current_pos[0]) << ", " <<
+				static_cast<int>(current_pos[1]) << ", " <<
+				static_cast<int>(current_pos[2]) << ")"  << "\n";
+
 			// Build voxel
-			voxels.push_back(Voxel(current_pos, glm::u8vec4(rgb, a)));
+			voxels->emplace(current_pos, Voxel(current_pos, glm::u8vec4(rgb, a)));
 
 			// Update position taking into account the model size
 			current_pos.x = (current_pos.x + 1) % model_size[0];
@@ -62,7 +77,35 @@ namespace cuvel
 		}
 
 		input.close();
-		return voxels;
+		*size = glm::u8vec3(model_size[0], model_size[1], model_size[2]);
+		*vertices = vertex_count;
+		*indices = index_count;
+		return;
+	}
+
+	void generateVoxmSample(
+		std::unordered_map<glm::u8vec3, Voxel>* voxels, 
+		glm::u8vec3* size,
+		uint32_t* vertices, uint32_t* indices)
+	{
+		*size = glm::u8vec3(254, 254, 254);
+		
+		for (uint8_t z = 0; z < size->z; z++)
+		{
+			for (uint8_t y = 0; y < size->y; y++)
+			{
+				for (uint8_t x = 0; x < size->x; x++)
+				{
+					glm::u8vec3 pos(x, y, z);
+					if (pos.x == 0 || pos.y == 0 || pos.z == 0 || (pos.x == pos.y && pos.y == pos.z))
+					{
+						voxels->emplace(pos, Voxel(pos, glm::u8vec4(255, 255, 255, 255)));
+					}
+				}
+			}
+		}
+		*vertices = 0;
+		*indices = 0;
 	}
 }
 

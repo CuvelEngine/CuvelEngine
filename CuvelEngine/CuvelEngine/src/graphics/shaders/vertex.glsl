@@ -17,12 +17,12 @@ uniform uint hasLighting;
 
 
 vec3 normals[6] = vec3[](
-	vec3( 1.0,  0.0,  0.0), //right -> 0
-	vec3(-1.0,  0.0,  0.0), //left  -> 1
-	vec3( 0.0,  1.0,  0.0), //back  -> 2
-	vec3( 0.0, -1.0,  0.0), //front -> 3
-	vec3( 0.0,  0.0,  1.0), //up    -> 4
-	vec3( 0.0,  0.0, -1.0)  //down  -> 5
+	vec3( 0.0,  1.0,  0.0), //UP = 0
+	vec3( 0.0, -1.0,  0.0), //DOWN = 1
+	vec3( 0.0,  0.0,  1.0), //NORTH = 2
+	vec3( 0.0,  0.0, -1.0), //SOUTH = 3
+	vec3( 1.0,  0.0,  0.0), //WEST = 4
+	vec3(-1.0,  0.0,  0.0)  //EAST = 5
 );
 
 void main() {

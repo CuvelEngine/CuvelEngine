@@ -90,6 +90,7 @@ namespace cuvel
 
 	bool OpenGLModel::isInsideClippingPlane(Camera* cam)
 	{
+		return true;
 		// Every corner has to be outside of the clipping plane for the model to be culled
 		for (glm::vec3& corner : this->mesh.corners)
 		{

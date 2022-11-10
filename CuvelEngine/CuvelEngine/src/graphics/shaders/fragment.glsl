@@ -10,7 +10,7 @@ uniform vec3 lightDir;
 
 void main() {
   vec3 norm = normalize(normal);
-  vec3 light = normalize(lightDir); 
+  vec3 light = normalize(-lightDir); 
   float diffuse = max(dot(norm, light), 0.0);
 
   outColor = vec4(color.rgb * (ambient + diffuse), color.a);
