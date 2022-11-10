@@ -25,12 +25,7 @@ namespace cuvel
 		// Read model size
 		glm::uint8 model_size[3];
 		input.read(reinterpret_cast<char*>(model_size), 3);
-
-		std::cout << "Size: (" << 
-			static_cast<int>(model_size[0]) << ", " << 
-			static_cast<int>(model_size[1]) << ", " <<
-			static_cast<int>(model_size[2]) << ")"  << std::endl;
-
+		
 		// Read vertex and index count
 		glm::uint32 vertex_count, index_count;
 		input.read(reinterpret_cast<char*>(&vertex_count), 4);
@@ -55,12 +50,7 @@ namespace cuvel
 
 			// Read RGB values
 			input.read(reinterpret_cast<char*>(&rgb), 3);
-
-			std::cout << "Looked up: (" <<
-				static_cast<int>(current_pos[0]) << ", " <<
-				static_cast<int>(current_pos[1]) << ", " <<
-				static_cast<int>(current_pos[2]) << ")"  << "\n";
-
+			
 			// Build voxel
 			voxels->emplace(current_pos, Voxel(current_pos, glm::u8vec4(rgb, a)));
 
