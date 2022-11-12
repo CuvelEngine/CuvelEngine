@@ -1,4 +1,4 @@
-![image](https://github.com/CuvelEngine/CuvelEngine/blob/main/wiki/banner2.png?raw=true)
+![image](https://github.com/CuvelEngine/CuvelEngine/blob/dev/wiki/banner2.png?raw=true)
 
 # CuvelEngine
 The Cuvel Engine is a learning project started by a group of students that wanted to get knee-deep into the world of volumetric graphics and physics, advanced voxelization of 3D models and real-time interactive simulations. 
