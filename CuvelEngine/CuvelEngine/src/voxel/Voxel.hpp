@@ -1,10 +1,13 @@
 #pragma once
+#include "VoxelReader.hpp"
 
+#include <memory>
 #include <string>
-#include <unordered_map>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
+
+#include <tsl/robin_map.h>
 
 
 namespace cuvel
@@ -26,17 +29,16 @@ namespace cuvel
 	public:
 		VoxelModel();
 		explicit VoxelModel(std::string filepath);
-		void populateMesh(cuvel::Mesh* mesh);
+		void populateMesh(std::shared_ptr<cuvel::Mesh> mesh);
 
 		glm::u8vec3 size{};
 		glm::i16vec3 iSize;
 		uint32_t vertexCount = 0;
 		uint32_t indexCount = 0;
-		std::unordered_map<glm::u8vec3, Voxel> voxels{};
+		tsl::robin_map<VOXEL_HASH> voxels{};
 
 	private:
 		bool opaqueNeighbor(glm::i16vec3& coords);
-
 	};
 }
 

@@ -1,6 +1,5 @@
 #include "Voxel.hpp"
 
-#include "VoxelReader.hpp"
 #include "graphics/Mesh.hpp"
 
 inline glm::i8vec3 neighOffsets[] = {
@@ -26,8 +25,11 @@ namespace cuvel
 		this->iSize = glm::i16vec3(size);
 	}
 
-	void VoxelModel::populateMesh(cuvel::Mesh* mesh)
+	void VoxelModel::populateMesh(std::shared_ptr<cuvel::Mesh> mesh)
 	{
+		//mesh->prepareBuffers(this->vertexCount, this->indexCount);
+		//TODO: Give proper vertex count in the voxm file
+		mesh->prepareBuffers(1322000, 1983000);
 		for (auto& [pos, voxel] : this->voxels)
 		{
 			if (voxel.color.a == 0) continue;
@@ -42,6 +44,7 @@ namespace cuvel
 			}
 		}
 		mesh->size = this->size;
+
 	}
 
 	bool VoxelModel::opaqueNeighbor(glm::i16vec3& coords)
@@ -52,3 +55,4 @@ namespace cuvel
 		return this->voxels.contains(glm::u8vec3(coords)) && this->voxels.at(coords).color.a == 255;
 	}
 }
+

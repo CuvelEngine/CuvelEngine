@@ -69,6 +69,9 @@
     <ClCompile Include="src\imgui\sources\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\OpenGL\OpenGLMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\GraphicFramework.hpp">
@@ -132,6 +135,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\Vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\OpenGL\OpenGLMesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

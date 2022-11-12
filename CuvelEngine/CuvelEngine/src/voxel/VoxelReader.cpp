@@ -11,7 +11,7 @@ namespace cuvel
 {
 	void readVoxmFile(
 		std::string& filePath, 
-		std::unordered_map<glm::u8vec3, Voxel>* voxels, 
+		tsl::robin_map<VOXEL_HASH>* voxels,
 		glm::u8vec3* size, 
 		uint32_t* vertices, uint32_t* indices)
 	{
@@ -74,7 +74,7 @@ namespace cuvel
 	}
 
 	void generateVoxmSample(
-		std::unordered_map<glm::u8vec3, Voxel>* voxels, 
+		tsl::robin_map<VOXEL_HASH>* voxels,
 		glm::u8vec3* size,
 		uint32_t* vertices, uint32_t* indices)
 	{

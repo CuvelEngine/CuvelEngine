@@ -29,5 +29,5 @@ void main() {
 	gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(position, 1.0);
 	out_color = color;
 	out_normal = NormalMatrix * normals[normalIndex];
-	out_ambient = 0.1 + (1 - hasLighting);
+	out_ambient = 0.1;
 }

@@ -1,5 +1,7 @@
 #pragma once
-#include "graphics/Mesh.hpp"
+#include <memory>
+
+#include "graphics/OpenGL/OpenGLMesh.hpp"
 #include "movement/Camera.hpp"
 
 namespace cuvel
@@ -10,27 +12,36 @@ namespace cuvel
 	class OpenGLModel
 	{
 	public:
-		explicit OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting);
-		~OpenGLModel();
+		explicit OpenGLModel(const std::shared_ptr<Mesh>& mesh, uint32_t coreProgram, bool hasLighting);
 
 		void render();
 		void getRenderStats(uint32_t* vertices, uint32_t* indices);
 
-		void translate(glm::vec3 newPos);
+		//TODO: Make sure this doesn't flip in Vulkan (Vulkan has inverted y axis)
+		glm::mat4 getModelMatrix();
+		glm::mat3 getNormalMatrix();
+		void updateMatrices();
 
+		void translate(glm::vec3 newPos);
+		bool isCamInsideModel(Camera* cam);
 		bool isInsideClippingPlane(Camera* cam);
+
+		void updateCorners();
 	private:
 		void loadUniform();
-		// Buffer and Array IDs from OpenGL
-		uint32_t VAO{};
-		uint32_t VBO{};
-		uint32_t EBO{};
 
 		// The shader from the framework
 		uint32_t coreProgram;
 		uint8_t hasLighting;
 
+		// Model data
+		glm::vec3 corners[8] = {};
+		glm::vec3 position{};
+		
 		// The mesh with the buffer data
-		Mesh mesh;
+		std::shared_ptr<OpenGLMesh> mesh;
+
+		glm::mat4 modelMatrix{};
+		glm::mat3 normalMatrix{};
 	};
 }

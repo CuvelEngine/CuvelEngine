@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 #include <glm/fwd.hpp>
+#include <tsl/robin_map.h>
+
+# define VOXEL_HASH glm::u8vec3, Voxel, std::hash<glm::u8vec3>, std::equal_to<glm::u8vec3>, std::allocator<std::pair<glm::u8vec3, Voxel>>, true
 
 namespace cuvel
 {
@@ -10,12 +12,12 @@ namespace cuvel
 
 	void readVoxmFile(
 		std::string& filePath,
-		std::unordered_map<glm::u8vec3, Voxel>* voxels,
+		tsl::robin_map<VOXEL_HASH>* voxels,
 		glm::u8vec3* size,
 		uint32_t* vertices, uint32_t* indices);
 
 	void generateVoxmSample(
-		std::unordered_map<glm::u8vec3, Voxel>* voxels,
+		tsl::robin_map<VOXEL_HASH>* voxels,
 		glm::u8vec3* size,
 		uint32_t* vertices, uint32_t* indices);
 }

@@ -18,8 +18,8 @@
 
 // Projection
 #define INITIAL_FOV 90.0f
-#define NEAR_PLANE 0.001f
-#define FAR_PLANE 1000.0f
+#define NEAR_PLANE 0.2f
+#define FAR_PLANE 10000.0f
 
 // Shaders
 #define VERTEX_LOCATION "src/graphics/shaders/vertex.glsl"
