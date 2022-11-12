@@ -140,6 +140,9 @@
     <ClInclude Include="src\graphics\OpenGL\OpenGLMesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\FlagVector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\graphics\shaders\fragment.glsl">

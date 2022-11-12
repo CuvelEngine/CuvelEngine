@@ -32,6 +32,8 @@ inline uint8_t offIndices2[6][4] = {
 	{5, 1, 3, 7}
 };
 
+cuvel::Vertex tempVertex{};
+uint32_t tempIndex = 0;
 
 namespace cuvel
 {
@@ -46,42 +48,29 @@ namespace cuvel
 		const glm::u8vec4 color,
 		Faces face)
 	{
-		{
-			Vertex vertex{};
 
-			vertex.color = color;
-			vertex.normal = face;
+		tempVertex.color = color;
+		tempVertex.normal = face;
 
-			//Insert vertices
-			vertex.position = coord + XYZRel[offIndices2[face][0]];
-			uint32_t v0 = this->insertVertex(vertex);
-			vertex.position = coord + XYZRel[offIndices2[face][1]];
-			uint32_t v1 = this->insertVertex(vertex);
-			vertex.position = coord + XYZRel[offIndices2[face][2]];
-			uint32_t v2 = this->insertVertex(vertex);
-			vertex.position = coord + XYZRel[offIndices2[face][3]];
-			uint32_t v3 = this->insertVertex(vertex);
+		//Insert vertices
+		tempVertex.position = coord + XYZRel[offIndices2[face][0]];
+		this->vertices.push_back(tempVertex);
+		tempVertex.position = coord + XYZRel[offIndices2[face][1]];
+		this->vertices.push_back(tempVertex);
+		tempVertex.position = coord + XYZRel[offIndices2[face][2]];
+		this->vertices.push_back(tempVertex);
+		tempVertex.position = coord + XYZRel[offIndices2[face][3]];
+		this->vertices.push_back(tempVertex);
 
-			// Triangle 1
-			this->insertIndex(v0);
-			this->insertIndex(v1);
-			this->insertIndex(v2);
-			// Triangle 2
-			this->insertIndex(v2);
-			this->insertIndex(v3);
-			this->insertIndex(v0);
-		}
-	}
-
-	uint32_t Mesh::insertVertex(const Vertex vertex)
-	{
-		uint32_t vtID = static_cast<uint32_t>(this->vertices.size());
-		this->vertices.push_back(vertex);
-		return vtID;
-	}
-
-	void Mesh::insertIndex(uint32_t index)
-	{
-		this->indices.push_back(index);
+		// Triangle 1
+		this->indices.push_back(tempIndex);
+		this->indices.push_back(tempIndex + 1);
+		this->indices.push_back(tempIndex + 2);
+		// Triangle 2
+		this->indices.push_back(tempIndex + 2);
+		this->indices.push_back(tempIndex + 3);
+		this->indices.push_back(tempIndex);
+		tempIndex += 4;
+		
 	}
 }

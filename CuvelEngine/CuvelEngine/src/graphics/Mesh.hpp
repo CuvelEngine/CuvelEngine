@@ -34,8 +34,6 @@ namespace cuvel
 
 		void prepareBuffers(uint32_t vertexCount, uint32_t indexCount);
 		void loadQuad(glm::u8vec3 coord, glm::u8vec4 color, Faces face);
-		uint32_t insertVertex(Vertex vertex);
-		void insertIndex(uint32_t index);
 
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;

@@ -50,6 +50,7 @@ Engine::Engine(GLibrary lib): dt(0), curTime(0), lastTime(0)
 	// Generate the mesh
 	std::shared_ptr<cuvel::Mesh> mesh = this->gFramework->addMesh(filename);
 	voxModel.populateMesh(mesh);
+
 	this->gFramework->registerMeshBuffers(filename);
 
 	mid2 = std::chrono::high_resolution_clock::now();
