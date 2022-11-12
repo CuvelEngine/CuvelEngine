@@ -20,7 +20,11 @@ namespace cuvel
 		void event(KeyMapper* keyMapper, float_t& dt) override;
 		void render() override;
 
-		void addModel(uint32_t id, Mesh mesh, bool hasLighting, glm::vec3 pos) override;
+		void addModel(uint32_t id, std::string& mesh, bool hasLighting, glm::vec3 pos) override;
+		std::shared_ptr<Mesh> addMesh(std::string& filename) override;
+		void destroyMesh(std::string& filename) override;
+
+		void registerMeshBuffers(std::string& mesh) override;
 
 		void setupImgui() override;
 		void newFrameImgui() override;

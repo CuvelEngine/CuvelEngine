@@ -110,7 +110,7 @@ namespace cuvel
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLMINOR);
 		glfwWindowHint(GLFW_RESIZABLE, RESIZABLE);
 		// Im not sure what this one does either
-		glfwWindowHint(GLFW_SAMPLES, GLSAMPLES);
+		//glfwWindowHint(GLFW_SAMPLES, GLSAMPLES);
 
 
 		if (!this->createWindow())
@@ -139,7 +139,7 @@ namespace cuvel
 		// Disable the notification severity level, we only care about warnings and errors
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 		
-		glEnable(GL_MULTISAMPLE);
+		//glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 
 		// Culling, so only one side of each triangle is rendered. Free fps basically
@@ -238,11 +238,41 @@ namespace cuvel
 		glFlush();
 	}
 
-	void OpenGLFramework::addModel(uint32_t id, Mesh mesh, bool hasLighting, glm::vec3 pos)
+	void OpenGLFramework::addModel(uint32_t id, std::string& mesh, bool hasLighting, glm::vec3 pos)
 	{
-		// self explanatory
-		this->models.emplace(id, new OpenGLModel(mesh, this->shader->id, hasLighting));
+		if (!this->meshes.contains(mesh))
+		{
+			throw std::runtime_error("Tried to create a model with non-existing mesh");
+		}
+		this->models.emplace(id, new OpenGLModel(this->meshes.at(mesh), this->shader->id, hasLighting));
 		this->models.at(id)->translate(pos);
+	}
+
+	std::shared_ptr<Mesh> OpenGLFramework::addMesh(std::string& filename)
+	{
+		if (this->meshes.contains(filename))
+		{
+			std::cout << "Tried to add mesh " << filename << " that is already in!!" << "\n";
+			return this->meshes.at(filename);
+		}
+		std::shared_ptr<OpenGLMesh> mesh = std::make_shared<OpenGLMesh>();
+		this->meshes.emplace(filename, mesh);
+		return mesh;
+	}
+
+	void OpenGLFramework::destroyMesh(std::string& filename)
+	{
+		if (!this->meshes.contains(filename)) return;
+		this->meshes.erase(filename);
+	}
+
+	void OpenGLFramework::registerMeshBuffers(std::string& mesh)
+	{
+		if (!this->meshes.contains(mesh))
+		{
+			throw std::runtime_error("Tried to register non-existing mesh");
+		}
+		std::dynamic_pointer_cast<OpenGLMesh>(this->meshes.at(mesh))->registerBuffers(this->shader->id);
 	}
 
 	void OpenGLFramework::setupImgui()
