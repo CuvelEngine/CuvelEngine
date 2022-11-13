@@ -58,7 +58,7 @@ void Voxelizer::resize(int resolution, std::vector<TriFace> &faces)
     float longestAxis = std::max(axisLengths.x, std::max(axisLengths.y, axisLengths.z));
 
     float factor = (resolution - 0.1) / longestAxis;
-    glm::vec3 displ = (glm::vec3(resolution, resolution, resolution) - (this->maxim - this->minim) * factor) * 0.5f;
+    glm::vec3 displ = (glm::ceil(axisLengths * factor) - ((this->maxim - this->minim) * factor)) * 0.5f;
 
     for (auto & v : faces)
     {
@@ -87,7 +87,7 @@ void Voxelizer::writeVoxmFile(std::string filePath, int res, std::unordered_set<
     float longestAxis = std::max(axisLengths.x, std::max(axisLengths.y, axisLengths.z));
     float factor = (res - 0.1) / longestAxis;
     glm::vec3 modelSizeTmp = axisLengths * factor;
-    glm::u8vec3 modelSize = glm::ceil(modelSizeTmp) - glm::vec3(1, 1, 1);
+    glm::u8vec3 modelSize = glm::ceil(modelSizeTmp);
 
     wf.write(reinterpret_cast<char*>(&modelSize.x), sizeof(modelSize.x));
     wf.write(reinterpret_cast<char*>(&modelSize.y), sizeof(modelSize.y));
@@ -102,28 +102,34 @@ void Voxelizer::writeVoxmFile(std::string filePath, int res, std::unordered_set<
 
 
 	glm::uint32 white(0xFFFFFFFF);
+    glm::uint8 opaque = 0xFF;
     bool lastAir = true;
-    for (unsigned z = 0; z <= modelSize.z; ++z)
+    for (glm::uint8 z = 0; z < modelSize.z; ++z)
     {
-	    for (unsigned y = 0; y <= modelSize.y; ++y)
+	    for (glm::uint8 y = 0; y < modelSize.y; ++y)
 	    {
-		    for (unsigned x = 0; x <= modelSize.x; ++x)
+		    for (glm::uint8 x = 0; x < modelSize.x; ++x)
 		    {
                 VoxelPos pos(x, y, z);
 			    if (voxels.contains(pos.pos)) // Not Air
 			    {
                     if (lastAir)
                     {
-                        glm::u8vec3 temp(x, y, z);
 
                         // Write the coordinates of the ...
-                        wf.write(reinterpret_cast<char*>(&temp.x), sizeof(temp.x));
-                        wf.write(reinterpret_cast<char*>(&temp.y), sizeof(temp.y));
-                        wf.write(reinterpret_cast<char*>(&temp.z), sizeof(temp.z));
+                        wf.write(reinterpret_cast<char*>(&x), sizeof(x));
+                        wf.write(reinterpret_cast<char*>(&y), sizeof(y));
+                        wf.write(reinterpret_cast<char*>(&z), sizeof(z));
                     }
                     
                     // Write the color (ARGB) of the voxel
-                    wf.write(reinterpret_cast<char*>(&white), sizeof(white));
+                    //wf.write(reinterpret_cast<char*>(&white), sizeof(white));
+                    glm::uint8 r = x, g = y, b = z;
+
+                    wf.write(reinterpret_cast<char*>(&opaque), sizeof(opaque));
+                    wf.write(reinterpret_cast<char*>(&x), sizeof(x));
+                    wf.write(reinterpret_cast<char*>(&y), sizeof(y));
+                    wf.write(reinterpret_cast<char*>(&z), sizeof(z));
 
                     lastAir = false;
 			    }
