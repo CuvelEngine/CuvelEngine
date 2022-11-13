@@ -1,4 +1,5 @@
 #include "triface.hpp"
+#include <glm/gtx/intersect.hpp>
 #include <limits>
 #include <iostream>
 
@@ -24,42 +25,6 @@ void TriFace::displace(const glm::vec3 displacement)
     this->vertices[0] += displacement;
     this->vertices[1] += displacement;
     this->vertices[2] += displacement;
-}
-
-// Möller–Trumbore intersection algorithm
-bool TriFace::intersectWithLine(glm::vec3 ray, glm::vec3 origin, glm::vec3 &intersection) const
-{
-    constexpr float epsilon = 0.0000001f;
-
-    glm::vec3 edge1 = this->vertices[1] - this->vertices[0];
-    glm::vec3 edge2 = this->vertices[2] - this->vertices[0];
-    glm::vec3 h = glm::cross(ray, edge2);
-    float a = glm::dot(edge1, h);
-    if (a > -epsilon && a < epsilon)
-    {
-        return false;  // The ray is parallel to the triangle
-    }
-
-    float f = 1.0f / a;
-    glm::vec3 s = origin - this->vertices[0];
-    float u = f * glm::dot(s, h);
-    if (u < 0.0f || u > 1.0f)
-    {
-        return false;
-    }
-
-    glm::vec3 q = glm::cross(s, edge1);
-    float v = f * glm::dot(ray, q);
-    if (v < 0.0 || u + v > 1.0)
-    {
-        return false;
-    }
-
-    // Now we find the intersection
-    float t = f * glm::dot(edge2, q);
-    intersection = origin + ray * t;
-
-    return true;
 }
 
 std::vector<VoxelPos> TriFace::voxelize()
@@ -88,8 +53,9 @@ std::vector<VoxelPos> TriFace::voxelize()
     {
         for (float z = minim.z + 0.5; z < maxim.z; ++z)
         {
-            if (this->intersectWithLine(glm::vec3(1, 0, 0), glm::vec3(minim.x, y, z), intersec))
+            if (glm::intersectLineTriangle(glm::vec3(minim.x, y, z), glm::vec3(1, 0, 0), this->vertices[0], this->vertices[1], this->vertices[2], intersec))
             {
+                intersec = glm::vec3(minim.x, y, z) + glm::vec3(1, 0, 0) * intersec.x;
                 glm::ivec3 voxelPos = glm::floor(intersec);
                 grid.emplace_back(VoxelPos(voxelPos.x, voxelPos.y, voxelPos.z));
                 if (roundf(intersec.x) == intersec.x)
@@ -106,8 +72,9 @@ std::vector<VoxelPos> TriFace::voxelize()
     {
         for (float z = minim.z + 0.5; z < maxim.z; ++z)
         {
-            if (this->intersectWithLine(glm::vec3(0, 1, 0), glm::vec3(x, minim.y, z), intersec))
+            if (glm::intersectLineTriangle(glm::vec3(x, minim.y, z), glm::vec3(0, 1, 0), this->vertices[0], this->vertices[1], this->vertices[2], intersec))
             {
+                intersec = glm::vec3(x, minim.y, z) + glm::vec3(0, 1, 0) * intersec.x;
                 glm::ivec3 voxelPos = glm::floor(intersec);
                 grid.emplace_back(VoxelPos(voxelPos.x, voxelPos.y, voxelPos.z));
                 if (roundf(intersec.y) == intersec.y)
@@ -124,8 +91,9 @@ std::vector<VoxelPos> TriFace::voxelize()
     {
         for (float y = minim.y + 0.5; y < maxim.y; ++y)
         {
-            if (this->intersectWithLine(glm::vec3(0, 0, 1), glm::vec3(x, y, minim.z), intersec))
+            if (glm::intersectLineTriangle(glm::vec3(x, y, minim.z), glm::vec3(0, 0, 1), this->vertices[0], this->vertices[1], this->vertices[2], intersec))
             {
+                intersec = glm::vec3(x, y, minim.z) + glm::vec3(0, 0, 1) * intersec.x;
                 glm::ivec3 voxelPos = glm::floor(intersec);
                 grid.emplace_back(VoxelPos(voxelPos.x, voxelPos.y, voxelPos.z));
                 if (roundf(intersec.z) == intersec.z)
