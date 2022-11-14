@@ -1,6 +1,7 @@
 #pragma once
 
 #include "modelreader.hpp"
+#include <unordered_set>
 
 
 class Voxelizer
@@ -15,4 +16,5 @@ public:
 
 private:
     void resize(int resolution, std::vector<TriFace> &faces);
+    void writeVoxmFile(std::string filePath, int res, std::unordered_set<glm::uint32>& voxels);
 };

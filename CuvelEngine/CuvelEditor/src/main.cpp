@@ -24,9 +24,9 @@ int main(int argc, char *argv[]) {
     }
 
     int resolution = std::stoi(argv[2]);
-    if (resolution < 1 || resolution > 1024)
+    if (resolution < 1 || resolution > 255)
     {
-        std::cout << "The resolution has to be bigger than zero and smaller or equal than 1024" << std::endl;
+        std::cout << "The resolution has to be bigger than zero and smaller or equal than 255" << std::endl;
         exit(1);
     }
 

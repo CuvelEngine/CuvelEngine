@@ -15,16 +15,34 @@ void readObjFile(std::string filePath, std::vector<TriFace> &faces)
         return;
     }
 
-    std::string line;
+    // Read the whole file at once
+    std::string buffer;
+    input.seekg(0, std::ios::end);
+    buffer.resize(input.tellg());
+    input.seekg(0);
+    input.read(buffer.data(), buffer.size());
+    input.close();
+
     unsigned int numVertices = 0;
-    while (std::getline(input, line))
+
+    std::vector<unsigned> lineStartIdxs = {0};
+    size_t lineBreakIdx = buffer.find('\n');
+    while (lineBreakIdx != std::string::npos)
     {
+        buffer[lineBreakIdx] = '\0';
+    	++lineBreakIdx;
+        lineStartIdxs.push_back(lineBreakIdx);
+        lineBreakIdx = buffer.find('\n', lineBreakIdx);
+    }
+
+    for (auto & idx: lineStartIdxs)
+    {
+        std::string_view line{buffer.c_str() + idx};
 
         if (line.substr(0,2) == "v ")
         {
-            char v;
             float x, y, z;
-            if (sscanf_s(line.c_str(), "v %f %f %f", &x, &y, &z) != 3)
+            if (sscanf_s(line.data(), "v %f %f %f", &x, &y, &z) != 3)
             {
                 throw std::runtime_error("Missing vertex coordinate in OBJ file");
             }
@@ -34,23 +52,20 @@ void readObjFile(std::string filePath, std::vector<TriFace> &faces)
         }
     }
 
-    // Go back to the start of the file
-    input.clear();
-    input.seekg(0);
-
-    while (std::getline(input, line))
+    for (auto& idx : lineStartIdxs)
     {
+        std::string_view line{ buffer.c_str() + idx };
 
         if (line.substr(0,2)=="f ")
         {
             int v1, v2, v3, v4;
             bool quad = false;
 
-            int matched = sscanf_s(line.c_str(), "f %d%*[^ ] %d%*[^ ] %d%*[^ ] %d\n", &v1, &v2, &v3, &v4);
+            int matched = sscanf_s(line.data(), "f %d%*[^ ] %d%*[^ ] %d%*[^ ] %d\n", &v1, &v2, &v3, &v4);
             if (matched == 4) quad = true;
             else if (matched != 3)
             {
-                int matched = sscanf_s(line.c_str(), "f %d %d %d %d\n", &v1, &v2, &v3, &v4);
+                int matched = sscanf_s(line.data(), "f %d %d %d %d\n", &v1, &v2, &v3, &v4);
                 if (matched == 4) quad = true;
                 else if (matched != 3) throw std::runtime_error("Missing triangle vertex in OBJ file");
             }
@@ -71,10 +86,6 @@ void readObjFile(std::string filePath, std::vector<TriFace> &faces)
             {
                 faces.emplace_back(TriFace(vertices[v1], vertices[v2], vertices[v3]));
             }
-            
         }
-
     }
-
-    input.close();
 }
