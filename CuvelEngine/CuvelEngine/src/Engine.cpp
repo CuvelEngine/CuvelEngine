@@ -7,6 +7,10 @@
 #include "movement/KeyMapper.hpp"
 #include <iostream>
 
+#include "voxel/Voxel.hpp"
+
+#include <chrono>
+
 Engine::Engine(GLibrary lib): dt(0), curTime(0), lastTime(0)
 {
 	// Imgui must be initialized before anything else
@@ -34,19 +38,45 @@ Engine::Engine(GLibrary lib): dt(0), curTime(0), lastTime(0)
 	// Hook imgui to the specific rendering library
 	this->gFramework->setupImgui();
 
-	// Making a cube for testing
-	uint32_t count = 0;
-	for (uint8_t x = 0; x < 18; x += 3)
+	std::chrono::time_point<std::chrono::high_resolution_clock> start, mid, mid2, end;
+	start = std::chrono::high_resolution_clock::now();
+
+	// Load the voxm file
+	std::string filename = "assets/testFinal.voxm";
+	cuvel::VoxelModel voxModel(filename);
+
+	mid = std::chrono::high_resolution_clock::now();
+
+	// Generate the mesh
+	std::shared_ptr<cuvel::Mesh> mesh = this->gFramework->addMesh(filename);
+	voxModel.populateMesh(mesh);
+
+	this->gFramework->registerMeshBuffers(filename);
+
+	mid2 = std::chrono::high_resolution_clock::now();
+
+	// Load the models
+	int count = 0;
+	for (int x = 0; x < 10; x++)
 	{
-		for (uint8_t y = 0; y < 18; y += 3)
+		for (int y = 0; y < 10; y++)
 		{
-			for (uint8_t z = 0; z < 18; z += 3)
-			{
-				this->gFramework->addModel(count, makeCube(), true, glm::vec3(x, y, z));
-				count++;
-			}
+			this->gFramework->addModel(count, filename, x % 2 == 0, { x * 255, 0, y * 255 });
+			count++;
 		}
 	}
+
+	end = std::chrono::high_resolution_clock::now();
+
+	// End result
+	std::chrono::duration<double> step1 = mid - start;
+	std::cout << "Read voxm in " << step1.count() << " seconds" << std::endl;
+	std::chrono::duration<double> step2 = mid2 - mid;
+	std::cout << "Generated mesh in " << step2.count() << " seconds" << std::endl;
+	std::chrono::duration<double> step3 = end - mid2;
+	std::cout << "Created models in " << step3.count() << " seconds" << std::endl;
+	std::chrono::duration<double> total = end - start;
+	std::cout << "Total time to load scene taken: " << total.count() << " seconds" << std::endl;
 }
 
 Engine::~Engine()

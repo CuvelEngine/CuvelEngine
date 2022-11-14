@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include "settings/GraphicOptions.hpp"
 #include <string>
 
@@ -35,7 +37,14 @@ namespace cuvel
 
 		// add a model to the rendering model buffer
 		// Each model must have an ID associated, management left to the implementation
-		virtual void addModel(uint32_t id, Mesh mesh, bool hasLighting, glm::vec3 pos) = 0;
+		virtual void addModel(uint32_t id, std::string& mesh, bool hasLighting, glm::vec3 pos) = 0;
+		// Meshes on the other hand are attached to their filenames
+		virtual std::shared_ptr<Mesh> addMesh(std::string& filename) = 0;
+
+		virtual void destroyMesh(std::string& filename) = 0;
+
+		// Register the buffer of a mesh once it has been populated
+		virtual void registerMeshBuffers(std::string& mesh) = 0;
 
 		// Imgui handling
 		virtual void setupImgui() = 0;
@@ -75,5 +84,8 @@ namespace cuvel
 		glm::vec3 lightDir{ -0.41f, 0.59f, 1.f };
 
 		GLFWwindow* window = nullptr;
+
+		// Meshes
+		std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes;
 	};
 }

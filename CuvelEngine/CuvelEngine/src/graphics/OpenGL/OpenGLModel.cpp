@@ -4,64 +4,22 @@
 
 namespace cuvel
 {
-	OpenGLModel::OpenGLModel(Mesh mesh, uint32_t coreProgram, bool hasLighting)
+	OpenGLModel::OpenGLModel(const std::shared_ptr<Mesh>& mesh, uint32_t coreProgram, bool hasLighting)
 	{
 		// Simply move the given mesh into the model
-		this->mesh = std::move(mesh);
+		this->mesh = std::dynamic_pointer_cast<OpenGLMesh> (mesh);
 		this->coreProgram = coreProgram;
 		this->hasLighting = hasLighting ? 1 : 0;
-
-		// Tell OpenGL to create 1 vertexArray
-		glCreateVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-
-		// Tell OpenGL to create 1 vertexBuffer and bind the mesh data to it
-		// STATIC selection since for now we won't be changing the meshes actively
-		// Might have to be changed to DYNAMIC
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, this->mesh.vertices.size() * sizeof(Vertex), this->mesh.vertices.data(), GL_STATIC_DRAW);
-
-		// Tell OpenGL to create an index buffer and bind the mesh data to it
-		// Again, STATIC might need to change
-		glGenBuffers(1, &EBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->mesh.indices.size() * sizeof(uint32_t), this->mesh.indices.data(), GL_STATIC_DRAW);
-
-		// Define the vertex position. Simply get the shader attribute location  and
-		// bind it to the location of the position inside of the Vertex structure
-		GLuint attribLoc = glGetAttribLocation(coreProgram, "position");
-		glVertexAttribPointer(attribLoc, 3, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, position)));
-		glEnableVertexAttribArray(attribLoc);
-
-		// Same thing with color. This time it's 4 unsigned bytes, and the GL_TRUE is signed
-		// because we want to have it normalized
-		attribLoc = glGetAttribLocation(coreProgram, "color");
-		glVertexAttribPointer(attribLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, color)));
-		glEnableVertexAttribArray(attribLoc);
-
-		// We finally add the normal index
-		attribLoc = glGetAttribLocation(coreProgram, "normalIndex");
-		glVertexAttribIPointer(attribLoc, 1, GL_UNSIGNED_BYTE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, normal)));
-		glEnableVertexAttribArray(attribLoc);
-		this->mesh.updateMatrices();
-	}
-
-	OpenGLModel::~OpenGLModel()
-	{
-		// DELET THIS
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
+		this->updateMatrices();
 	}
 
 	void OpenGLModel::loadUniform()
 	{
 		// Update the model matrix uniform for this model
-		glUniformMatrix4fv(glGetUniformLocation(this->coreProgram, "ModelMatrix"), 1, false, glm::value_ptr(this->mesh.getModelMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(this->coreProgram, "ModelMatrix"), 1, false, glm::value_ptr(this->getModelMatrix()));
 
 		// Update the normal matrix as well
-		glUniformMatrix3fv(glGetUniformLocation(this->coreProgram, "NormalMatrix"), 1, false, glm::value_ptr(this->mesh.getNormalMatrix()));
+		glUniformMatrix3fv(glGetUniformLocation(this->coreProgram, "NormalMatrix"), 1, false, glm::value_ptr(this->getNormalMatrix()));
 
 		// Update the lighting flag
 		glUniform1ui(glGetUniformLocation(this->coreProgram, "hasLighting"), this->hasLighting);
@@ -71,27 +29,53 @@ namespace cuvel
 	void OpenGLModel::render()
 	{
 		this->loadUniform();
-		// So what this does is it selects the array we want to render then say "pls drow in scrin"
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, this->mesh.indices.size(), GL_UNSIGNED_INT, nullptr);
+		this->mesh->render();
 	}
 
 	void OpenGLModel::getRenderStats(uint32_t* vertices, uint32_t* indices)
 	{
-		*vertices += this->mesh.vertices.size();
-		*indices += this->mesh.indices.size();
+		*vertices += this->mesh->vertices.size();
+		*indices += this->mesh->indices.size();
 	}
+
+	glm::mat4 OpenGLModel::getModelMatrix()
+	{
+		return this->modelMatrix;
+	}
+
+	glm::mat3 OpenGLModel::getNormalMatrix()
+	{
+		return this->normalMatrix;
+	}
+
+	void OpenGLModel::updateMatrices()
+	{
+		// creates a model matrix with the model position, simple as it looks
+		this->modelMatrix = glm::translate(glm::mat4(1.f), this->position);
+		// creates a normal matrix with the model matrix
+		this->normalMatrix = glm::transpose(glm::inverse(glm::mat3(this->modelMatrix)));
+		this->updateCorners();
+	}
+
 	void OpenGLModel::translate(glm::vec3 newPos)
 	{
-		if (this->mesh.position == newPos) return;
-		this->mesh.position = newPos;
-		this->mesh.updateMatrices();
+		if (this->position == newPos) return;
+		this->position = newPos;
+		this->updateMatrices();
+	}
+
+	bool OpenGLModel::isCamInsideModel(Camera* cam)
+	{
+		return this->corners[0].x <= cam->pos.x && cam->pos.x <= this->corners[7].x &&
+			   this->corners[0].y <= cam->pos.x && cam->pos.y <= this->corners[7].y &&
+			   this->corners[0].z <= cam->pos.x && cam->pos.z <= this->corners[7].z;
 	}
 
 	bool OpenGLModel::isInsideClippingPlane(Camera* cam)
 	{
+		if (this->isCamInsideModel(cam)) return true;
 		// Every corner has to be outside of the clipping plane for the model to be culled
-		for (glm::vec3& corner : this->mesh.corners)
+		for (glm::vec3& corner : this->corners)
 		{
 			if (cam->pointInFrustum(corner) != FrustResult::OUTSIDE)
 			{
@@ -100,5 +84,20 @@ namespace cuvel
 		}
 		return false;
 	}
+	
+
+	void OpenGLModel::updateCorners()
+	{
+		this->corners[0] = this->position;
+		this->corners[1] = glm::vec3(this->position.x + this->mesh->size.x, this->position.y, this->position.z);
+		this->corners[2] = glm::vec3(this->position.x, this->position.y + this->mesh->size.y, this->position.z);
+		this->corners[3] = glm::vec3(this->position.x, this->position.y, this->position.z + this->mesh->size.z);
+		this->corners[4] = glm::vec3(this->position.x + this->mesh->size.x, this->position.y + this->mesh->size.y, this->position.z);
+		this->corners[5] = glm::vec3(this->position.x + this->mesh->size.x, this->position.y, this->position.z + this->mesh->size.z);
+		this->corners[6] = glm::vec3(this->position.x, this->position.y + this->mesh->size.y, this->position.z + this->mesh->size.z);
+		this->corners[7] = glm::vec3(this->position.x + this->mesh->size.x, this->position.y + this->mesh->size.y, this->position.z + this->mesh->size.z);
+	}
+
+
 }
 
